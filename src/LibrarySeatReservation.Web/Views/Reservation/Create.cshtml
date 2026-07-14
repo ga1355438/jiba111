@@ -1,6 +1,59 @@
+@using LibrarySeatReservation.Web.Constants
 @{
     ViewData["Title"] = "预约提交";
+    var seat = ViewBag.Seat as LibrarySeatReservation.Web.Models.Entities.Seat;
+    var timeSlots = ViewBag.TimeSlots as string[];
+    var displayNames = ViewBag.DisplayNames as Dictionary<string, string>;
+    var selectedTimeSlot = ViewBag.SelectedTimeSlot as string;
+    var today = (DateTime)ViewBag.Today;
 }
 
 <h2>预约提交</h2>
-<p>预约提交页面（待实现）</p>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">座位：@seat?.Name</h5>
+        <p>位置：@seat?.Location</p>
+    </div>
+</div>
+
+<form method="post">
+    <input type="hidden" name="seatId" value="@seat?.Id" />
+
+    <div class="mb-3">
+        <label class="form-label"><strong>当前用户</strong></label>
+        <p>@(Context.Session.GetString("CurrentUserName") ?? "张三")</p>
+    </div>
+
+    <div class="mb-3">
+        <label for="reserveDate" class="form-label"><strong>预约日期</strong></label>
+        @{
+            var dateStr = today.ToString("yyyy-MM-dd");
+        }
+        <input type="date" class="form-control" id="reserveDate" name="reserveDate"
+               value="@dateStr" min="@dateStr" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label"><strong>选择时段</strong></label>
+        @if (timeSlots != null && displayNames != null)
+        {
+            @foreach (var slot in timeSlots)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="timeSlot" value="@slot"
+                           id="slot_@slot" @(slot == selectedTimeSlot ? "checked" : "") required />
+                    <label class="form-check-label" for="slot_@slot">@displayNames[slot]</label>
+                </div>
+            }
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">提交预约</button>
+    <a asp-controller="Seat" asp-action="Detail" asp-route-id="@seat?.Id" class="btn btn-outline-secondary">返回</a>
+</form>

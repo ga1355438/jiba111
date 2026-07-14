@@ -1,6 +1,60 @@
+@model List<LibrarySeatReservation.Web.Models.Entities.Seat>
 @{
     ViewData["Title"] = "座位列表";
 }
 
 <h2>座位列表</h2>
-<p>座位列表页面（待实现）</p>
+<p>共 @ViewBag.TotalItems 个座位，当前第 @ViewBag.CurrentPage/@ViewBag.TotalPages 页</p>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>编号</th>
+            <th>位置</th>
+            <th>电源</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var seat in Model)
+        {
+            <tr>
+                <td>@seat.Name</td>
+                <td>@seat.Location</td>
+                <td>@(seat.HasPower ? "有" : "无")</td>
+                <td>
+                    @if (seat.Status == 0)
+                    {
+                        <span class="badge bg-success">可用</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">维护中</span>
+                    }
+                </td>
+                <td>
+                    @if (seat.Status == 0)
+                    {
+                        <a asp-action="Detail" asp-route-id="@seat.Id" class="btn btn-primary btn-sm">查看详情</a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary btn-sm" disabled>维护中</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav>
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == (int)ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="List" asp-route-page="@i">@i</a>
+            </li>
+        }
+    </ul>
+</nav>

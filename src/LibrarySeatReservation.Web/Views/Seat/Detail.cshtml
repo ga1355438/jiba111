@@ -1,6 +1,73 @@
+@model LibrarySeatReservation.Web.Models.Entities.Seat
+@using LibrarySeatReservation.Web.Constants
 @{
     ViewData["Title"] = "座位详情";
+    var reservations = ViewBag.Reservations as List<LibrarySeatReservation.Web.Models.Entities.Reservation>;
 }
 
 <h2>座位详情</h2>
-<p>座位详情页面（待实现）</p>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p><strong>位置：</strong>@Model.Location</p>
+        <p><strong>电源：</strong>@(Model.HasPower ? "有" : "无")</p>
+        <p>
+            <strong>状态：</strong>
+            @if (Model.Status == 0)
+            {
+                <span class="badge bg-success">可用</span>
+            }
+            else
+            {
+                <span class="badge bg-warning">维护中</span>
+            }
+        </p>
+    </div>
+</div>
+
+@if (Model.Status == 0)
+{
+    <h4>今日时段状态 (@ViewBag.Today.ToString("yyyy-MM-dd"))</h4>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>时段</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var slot in TimeSlots.All)
+            {
+                var isReserved = reservations?.Any(r => r.TimeSlot == slot && r.Status == 0) == true;
+                <tr>
+                    <td>@TimeSlots.DisplayNames[slot]</td>
+                    <td>
+                        @if (isReserved)
+                        {
+                            <span class="badge bg-danger">已预约</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">可预约</span>
+                        }
+                    </td>
+                    <td>
+                        @if (isReserved)
+                        {
+                            <button class="btn btn-secondary btn-sm" disabled>已被预约</button>
+                        }
+                        else
+                        {
+                            <a asp-controller="Reservation" asp-action="Create" asp-route-seatId="@Model.Id" asp-route-timeSlot="@slot"
+                               class="btn btn-primary btn-sm">预约此时段</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="List" class="btn btn-outline-secondary">返回列表</a>

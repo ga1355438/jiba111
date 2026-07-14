@@ -30,6 +30,13 @@ public class ReservationRepository : IReservationRepository
             .ToListAsync();
     }
 
+    public async Task<List<Reservation>> GetBySeatAndDateAsync(int seatId, DateTime date)
+    {
+        return await _context.Reservations
+            .Where(r => r.SeatId == seatId && r.ReserveDate.Date == date.Date && r.Status != 2)
+            .ToListAsync();
+    }
+
     public async Task<Reservation?> GetByIdAsync(int id)
     {
         return await _context.Reservations.Include(r => r.Seat).FirstOrDefaultAsync(r => r.Id == id);
