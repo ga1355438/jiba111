@@ -18,7 +18,7 @@ public class ReservationRepository : IReservationRepository
         return await _context.Reservations
             .AsNoTracking()
             .Include(r => r.Seat)
-            .Where(r => r.UserName == userName)
+            .Where(r => r.UserName == userName && (r.Status == 0 || r.Status == 2))
             .OrderByDescending(r => r.ReserveDate)
             .ToListAsync();
     }

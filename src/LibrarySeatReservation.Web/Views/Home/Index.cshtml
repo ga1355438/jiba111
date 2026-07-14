@@ -1,10 +1,14 @@
 ﻿@{
     ViewData["Title"] = "首页";
+    var currentUser = Context.Session.GetString("CurrentUserName") ?? "张三";
 }
 
 <div class="text-center mt-5">
     <h1 class="display-4">图书馆座位预约系统</h1>
     <p class="lead">欢迎使用座位预约系统，请选择以下功能：</p>
+    <p class="text-muted">
+        当前用户：<strong>@currentUser</strong> ｜ 今天：<strong>@DateTime.Today.ToString("yyyy年MM月dd日")</strong>
+    </p>
     <div class="mt-4">
         <a asp-controller="Seat" asp-action="List" class="btn btn-primary btn-lg me-3">查看座位</a>
         <a asp-controller="Reservation" asp-action="My" class="btn btn-outline-secondary btn-lg">我的预约</a>
