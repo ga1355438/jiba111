@@ -12,100 +12,24 @@
 | Web 框架 | ASP.NET Core MVC | 8.0 |
 | 视图引擎 | Razor | - |
 | ORM | Entity Framework Core | 8.0 |
-| 数据库 | SQL Server LocalDB | - |
-| 前端样式 | Bootstrap | 5.x |
-| 前端脚本 | jQuery | - |
+| 数据库 | SQL Server LocalDB | 2019+ |
+| 前端 | Bootstrap 5 + jQuery | - |
 | 密码加密 | PasswordHasher | ASP.NET Core 内置 |
 | 缓存 | IMemoryCache | 5分钟过期 |
+| 自动化测试 | Playwright | 1.52.0 |
 | 容器化 | Docker | 多阶段构建 |
 
 ---
 
-## 项目结构
-
-### 新版项目（src/LibrarySeatReservation.Web）
-
-```
-src/LibrarySeatReservation.Web/
-├── Controllers/                    # 控制器层
-│   ├── HomeController.cs           # 用户首页
-│   ├── SeatController.cs           # 座位列表、详情
-│   ├── ReservationController.cs    # 预约提交、我的预约、取消、切换账号
-│   └── AdminController.cs          # 管理员登录、座位管理、预约管理、统计
-├── Models/
-│   ├── Entities/                   # 实体类（Seat, Reservation, AdminUser）
-│   └── Enums/                      # 枚举定义（SeatStatus, ReservationStatus）
-├── Data/                           # 数据访问层
-│   ├── AppDbContext.cs             # EF Core 数据库上下文
-│   └── SeedData.cs                 # 种子数据（20座位 + 1管理员）
-├── DataAccess/                     # 数据访问接口与实现
-│   ├── ISeatRepository.cs / SeatRepository.cs
-│   ├── IReservationRepository.cs / ReservationRepository.cs
-│   └── IAdminUserRepository.cs / AdminUserRepository.cs
-├── Services/                       # 业务逻辑层
-│   ├── ISeatService.cs / SeatService.cs
-│   ├── IReservationService.cs / ReservationService.cs
-│   └── IAdminService.cs / AdminService.cs
-├── Helpers/
-│   └── PasswordHelper.cs           # PasswordHasher 封装
-├── Constants/
-│   └── TimeSlots.cs                # 时段常量（5个固定时段）
-├── Views/                          # 视图层（10页）
-│   ├── Home/Index.cshtml
-│   ├── Seat/List.cshtml, Detail.cshtml
-│   ├── Reservation/Create.cshtml, My.cshtml
-│   ├── Admin/Login.cshtml, SeatIndex.cshtml, SeatCreate.cshtml,
-│   │   SeatEdit.cshtml, ReservationIndex.cshtml, Statistics.cshtml
-│   └── Shared/_Layout.cshtml, _AdminLayout.cshtml
-├── Migrations/                     # EF Core 迁移
-├── wwwroot/                        # 静态资源（CSS/JS/lib）
-├── Program.cs                      # 程序入口（DI + Session + 自动迁移）
-├── appsettings.json                # 配置文件
-├── Dockerfile                      # Docker 多阶段构建
-├── docker-compose.yml              # Docker Compose 配置
-└── LibrarySeatReservation.Web.csproj
-```
-
----
-
-## 功能清单
-
-### 用户端
-
-| 页面 | 路由 | 功能 |
-|------|------|------|
-| 首页 | `GET /` | 欢迎语、快捷入口 |
-| 座位列表 | `GET /Seat/List?page=1` | 分页展示20个座位 |
-| 座位详情 | `GET /Seat/Detail/{id}` | 座位信息 + 5时段状态 |
-| 预约提交 | `GET/POST /Reservation/Create?seatId=&timeSlot=` | 选择日期时段，冲突校验 |
-| 我的预约 | `GET /Reservation/My` | 当前用户预约记录 |
-| 取消预约 | `POST /Reservation/Cancel/{id}` | 仅限 Status=0 |
-
-### 管理端
-
-| 页面 | 路由 | 功能 |
-|------|------|------|
-| 管理员登录 | `GET/POST /Admin/Login` | PasswordHasher 验证 |
-| 座位管理 | `GET /Admin/SeatIndex` | 座位列表 + 编辑/删除（编号唯一性校验） |
-| 新增座位 | `GET/POST /Admin/SeatCreate` | 创建新座位（编号重复提示） |
-| 编辑座位 | `GET/POST /Admin/SeatEdit/{id}` | 修改座位信息 |
-| 删除座位 | `POST /Admin/SeatDelete/{id}` | 删除座位（有预约记录时阻止） |
-| 预约管理 | `GET /Admin/ReservationIndex` | 按日期/状态筛选，数据库级分页 |
-| 统计 | `GET /Admin/Statistics` | 总数/今日/热门TOP5(显示名称)/时段分布（缓存5分钟） |
-
----
-
-## 运行前提
-
-| 依赖 | 版本 | 说明 |
-|------|------|------|
-| .NET SDK | 8.0+ | `dotnet --version` 验证 |
-| SQL Server LocalDB | 2019+ | `sqllocaldb info` 验证 |
-| dotnet-ef | 8.0+ | `dotnet tool install --global dotnet-ef --version 8.0.0` |
-
----
-
 ## 快速开始
+
+### 环境要求
+
+| 依赖 | 版本 | 验证命令 |
+|------|------|----------|
+| .NET SDK | 8.0+ | `dotnet --version` |
+| SQL Server LocalDB | 2019+ | `sqllocaldb info` |
+| Node.js（仅测试） | 18+ | `node -v` |
 
 ### 本地运行
 
@@ -114,27 +38,22 @@ cd src/LibrarySeatReservation.Web
 dotnet run --urls http://localhost:5000
 ```
 
-- 用户端：http://localhost:5000
-- 管理端：http://localhost:5000/Admin/Login
-
-### 数据库初始化
-
-项目启动时自动执行：
-1. `context.Database.Migrate()` — 应用迁移建库建表
-2. `SeedData.Initialize(context)` — 初始化种子数据（如表为空）
-
-如需重建数据库：
-```bash
-cd src/LibrarySeatReservation.Web
-dotnet ef database drop
-dotnet ef database update
-```
+- 用户端首页：http://localhost:5000
+- 管理端登录：http://localhost:5000/Admin/Login
 
 ### Docker 运行
 
 ```bash
 cd src/LibrarySeatReservation.Web
 docker-compose up -d
+```
+
+### 运行自动化测试
+
+```bash
+npm install
+npx playwright install
+npx playwright test
 ```
 
 ---
@@ -146,38 +65,118 @@ docker-compose up -d
 | 账号 | 角色 | 说明 |
 |------|------|------|
 | 张三 | 学生 | 默认体验账号 |
-| 李四 | 学生 | 体验账号 |
-| 王五 | 学生 | 体验账号 |
+| 李四 | 学生 | 导航栏切换 |
+| 王五 | 学生 | 导航栏切换 |
+
+体验账号通过 Session 切换，无需密码，导航栏下拉选择即可。
 
 ### 管理员账号
 
-| 账号 | 密码 | 说明 |
+| 用户名 | 密码 | 说明 |
+|--------|------|------|
+| admin | 123456 | 管理端登录（密码经 PasswordHasher 哈希存储） |
+
+---
+
+## 功能清单
+
+### 用户端（5 页）
+
+| 页面 | 路由 | 功能 |
 |------|------|------|
-| admin | 123456 | 管理员登录（密码经 PasswordHasher 哈希存储） |
+| 首页 | `GET /` | 欢迎语、当前用户、今日日期、快捷入口 |
+| 座位列表 | `GET /Seat/List?page=1` | 分页展示 20 个座位，含电源/位置/状态 |
+| 座位详情 | `GET /Seat/Detail/{id}` | 座位信息 + 5 个时段预约状态 |
+| 预约提交 | `GET/POST /Reservation/Create?seatId=&timeSlot=` | 选择日期时段，冲突校验 |
+| 我的预约 | `GET /Reservation/My` | 当前用户预约记录，支持取消 |
+
+### 管理端（5 页）
+
+| 页面 | 路由 | 功能 |
+|------|------|------|
+| 管理员登录 | `GET/POST /Admin/Login` | PasswordHasher 验证 |
+| 座位管理 | `GET /Admin/SeatIndex` | 座位列表 + 编辑/删除 |
+| 新增/编辑座位 | `GET/POST /Admin/SeatCreate`, `/Admin/SeatEdit/{id}` | 座位 CRUD |
+| 预约管理 | `GET /Admin/ReservationIndex` | 按日期/状态筛选，分页 |
+| 统计 | `GET /Admin/Statistics` | 总数/今日/热门 TOP5/时段分布 |
+
+---
+
+## 项目结构
+
+```
+├── src/LibrarySeatReservation.Web/    # 主项目
+│   ├── Controllers/                   # 控制器（4 个）
+│   │   ├── HomeController.cs          # 用户首页
+│   │   ├── SeatController.cs          # 座位列表、详情
+│   │   ├── ReservationController.cs   # 预约提交、我的预约、取消、切换账号
+│   │   └── AdminController.cs         # 管理员登录、座位管理、预约管理、统计
+│   ├── Models/Entities/               # 实体类（Seat, Reservation, AdminUser）
+│   ├── Data/                          # DbContext + 种子数据
+│   ├── DataAccess/                    # Repository 接口与实现
+│   ├── Services/                      # Service 接口与实现
+│   ├── Views/                         # Razor 视图（10 页）
+│   ├── Constants/                     # 时段常量
+│   ├── Helpers/                       # PasswordHasher 封装
+│   ├── Migrations/                    # EF Core 迁移
+│   ├── Program.cs                     # 入口（DI + Session + 自动迁移）
+│   ├── appsettings.json               # 数据库连接串
+│   ├── Dockerfile                     # Docker 多阶段构建
+│   └── docker-compose.yml             # Docker Compose 配置
+├── database/                          # 数据库初始化说明
+├── docs/                              # 项目文档（17 篇 + 任务板）
+├── tests/                             # Playwright 自动化测试
+├── prototype/                         # 静态原型
+├── LibrarySeatReservation.slnx        # .NET 8 解决方案
+├── playwright.config.ts               # Playwright 配置
+├── package.json                       # Node.js 依赖（测试用）
+└── README.md                          # 本文件
+```
 
 ---
 
 ## 数据库
 
-| 表名 | 字段 | 种子数据 |
-|------|------|---------|
-| Seats | Id, Name, Location, HasPower, Status, CreatedAt | 20条（A/B/C/D区各5个） |
-| Reservations | Id, SeatId, UserName, ReserveDate, TimeSlot, Status, CreatedAt | 空 |
-| AdminUsers | Id, Username, Password, CreatedAt | 1条（admin/123456） |
+### 初始化方式
+
+采用 **Code First**，项目启动时自动完成：
+
+1. `context.Database.Migrate()` — 应用迁移建库建表
+2. `SeedData.Initialize(context)` — 插入种子数据（如表为空）
+
+无需手动执行 SQL。如需重建：
+
+```bash
+cd src/LibrarySeatReservation.Web
+dotnet ef database drop
+dotnet run --urls http://localhost:5000
+```
+
+详见 [database/README.md](database/README.md)。
+
+### 种子数据
+
+| 表 | 数量 | 说明 |
+|----|------|------|
+| Seats | 20 条 | A/B/C/D 四区各 5 个，其中 3 个维护中 |
+| AdminUsers | 1 条 | admin / 123456 |
+| Reservations | 0 条 | 运行后由用户创建 |
+
+详见 [database/seed-data.md](database/seed-data.md)。
 
 ---
 
-## 开发阶段
+## 已知限制
 
-| Sprint | 目标 | 状态 |
-|--------|------|------|
-| Sprint 0 | 骨架搭建（.NET 8, EF Core 8, DI, Session） | ✅ 完成 |
-| Sprint 1 | 用户端核心链路（座位→详情→预约→取消） | ✅ 完成 |
-| Sprint 2 | 管理端核心链路（登录→座位CRUD→预约管理→统计） | ✅ 完成 |
-| Sprint 3 | 性能优化（AsNoTracking, MemoryCache）+ Docker | ✅ 完成 |
-| Sprint 4 | 功能验证 + 文档审计 + 最终交付 | ✅ 完成 |
-| 功能完善 | 审计缺口补全、异常处理、UI 样式、空状态、响应式 | ✅ 完成 |
-| 联调测试 | 全链路联调、代码审查、缺陷闭环 | ✅ 完成 |
+| 编号 | 限制 | 说明 |
+|------|------|------|
+| L-01 | 无单元测试项目 | 课程演示系统，未引入 xUnit/NUnit |
+| L-02 | 体验账号切换无鉴权 | 设计如此，演示用途 |
+| L-03 | 统计缓存无主动失效 | 5分钟 TTL 过期自动刷新 |
+| L-04 | 无邮件/短信通知 | 本期范围外 |
+| L-05 | 无数据导出功能 | 本期范围外 |
+| L-06 | 取消预约后无法重新预约同时段 | 唯一索引限制，取消记录仍占时段 |
+| L-07 | 预约日期缺服务端过去日期校验 | 客户端 min 属性限制，低风险 |
 
 ---
 
@@ -201,5 +200,5 @@ docker-compose up -d
 | 14 | [管理端与权限开发记录](docs/14-管理端与权限开发记录.md) | Sprint 2 管理端验证 |
 | 15 | [功能完善与体验优化记录](docs/15-功能完善与体验优化记录.md) | 功能完善与体验优化 |
 | 16 | [联调测试与缺陷闭环记录](docs/16-联调测试与缺陷闭环记录.md) | 联调测试与缺陷闭环 |
-| 17 | [最终交付记录](docs/17-最终交付记录.md) | 最终交付 |
+| 17 | [交付说明与项目复盘](docs/17-交付说明与项目复盘.md) | 最终交付与复盘 |
 | - | [项目任务板与迭代记录](docs/项目任务板与迭代记录.md) | 任务跟踪 |
