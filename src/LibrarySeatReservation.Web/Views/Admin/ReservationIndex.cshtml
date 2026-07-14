@@ -75,13 +75,25 @@
 @if (Model.Any())
 {
     <nav>
-        <ul class="pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @((int)ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" href="?page=1&date=@ViewBag.FilterDate&status=@ViewBag.FilterStatus">首页</a>
+            </li>
+            <li class="page-item @((int)ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" href="?page=@((int)ViewBag.CurrentPage - 1)&date=@ViewBag.FilterDate&status=@ViewBag.FilterStatus">上一页</a>
+            </li>
             @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
             {
                 <li class="page-item @((int)ViewBag.CurrentPage == i ? "active" : "")">
                     <a class="page-link" href="?page=@i&date=@ViewBag.FilterDate&status=@ViewBag.FilterStatus">@i</a>
                 </li>
             }
+            <li class="page-item @((int)ViewBag.CurrentPage == (int)ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="?page=@((int)ViewBag.CurrentPage + 1)&date=@ViewBag.FilterDate&status=@ViewBag.FilterStatus">下一页</a>
+            </li>
+            <li class="page-item @((int)ViewBag.CurrentPage == (int)ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link" href="?page=@((int)ViewBag.TotalPages)&date=@ViewBag.FilterDate&status=@ViewBag.FilterStatus">末页</a>
+            </li>
         </ul>
     </nav>
 }

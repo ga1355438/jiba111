@@ -15,7 +15,10 @@
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">暂无预约记录</div>
+    <div class="text-center py-4">
+        <p class="text-muted mb-2">暂无预约记录</p>
+        <a asp-controller="Seat" asp-action="List" class="btn btn-primary btn-sm">去预约座位</a>
+    </div>
 }
 else
 {
