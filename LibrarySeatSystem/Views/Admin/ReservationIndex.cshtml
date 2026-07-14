@@ -1,0 +1,78 @@
+@model List<LibrarySeatSystem.Models.Entities.Reservation>
+@{
+    ViewData["Title"] = "预约管理";
+}
+
+<h2>预约管理</h2>
+
+<form method="get" class="row g-3 mb-3">
+    <div class="col-auto">
+        <label class="form-label">预约日期</label>
+        <input type="date" name="date" value="@ViewBag.FilterDate" class="form-control" />
+    </div>
+    <div class="col-auto">
+        <label class="form-label">状态</label>
+        <select name="status" class="form-select">
+            <option value="">全部</option>
+            @if (ViewBag.FilterStatus?.ToString() == "0")
+            {
+                <option value="0" selected>已预约</option>
+            }
+            else
+            {
+                <option value="0">已预约</option>
+            }
+            @if (ViewBag.FilterStatus?.ToString() == "2")
+            {
+                <option value="2" selected>已取消</option>
+            }
+            else
+            {
+                <option value="2">已取消</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto align-self-end">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>座位编号</th>
+            <th>预约人</th>
+            <th>预约日期</th>
+            <th>时段</th>
+            <th>状态</th>
+            <th>创建时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Seat?.Name</td>
+                <td>@r.UserName</td>
+                <td>@r.ReserveDate.ToString("yyyy-MM-dd")</td>
+                <td>@r.TimeSlot</td>
+                <td>
+                    @if (r.Status == 0)
+                    {
+                        <span class="badge bg-success">已预约</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">已取消</span>
+                    }
+                </td>
+                <td>@r.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">暂无预约记录</div>
+}

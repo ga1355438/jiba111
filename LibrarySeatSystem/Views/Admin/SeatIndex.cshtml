@@ -1,0 +1,53 @@
+@model List<LibrarySeatSystem.Models.Entities.Seat>
+@{
+    ViewData["Title"] = "座位管理";
+}
+
+<h2>座位管理</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<a asp-action="SeatCreate" class="btn btn-success mb-3">新增座位</a>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>座位编号</th>
+            <th>位置</th>
+            <th>电源</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var seat in Model)
+        {
+            <tr>
+                <td>@seat.Name</td>
+                <td>@seat.Location</td>
+                <td>@(seat.HasPower ? "有" : "无")</td>
+                <td>
+                    @if (seat.Status == 0)
+                    {
+                        <span class="badge bg-success">可用</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">维护中</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="SeatEdit" asp-route-id="@seat.Id" class="btn btn-sm btn-outline-primary">编辑</a>
+                    <form asp-action="SeatDelete" asp-route-id="@seat.Id" method="post" class="d-inline"
+                          onsubmit="return confirm('确定删除此座位吗？')">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-danger">删除</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

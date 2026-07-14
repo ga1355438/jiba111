@@ -1,0 +1,66 @@
+@model LibrarySeatSystem.Models.Entities.Seat
+@{
+    ViewData["Title"] = "座位详情";
+    var reservedSlots = (List<string>)ViewBag.ReservedSlots;
+    var allSlots = new[] { "08:00-10:00", "10:00-12:00", "14:00-16:00", "16:00-18:00", "19:00-21:00" };
+}
+
+<h2>座位详情</h2>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p><strong>位置：</strong>@Model.Location</p>
+        <p><strong>电源：</strong>@(Model.HasPower ? "有" : "无")</p>
+        <p>
+            <strong>状态：</strong>
+            @if (Model.Status == 0)
+            {
+                <span class="badge bg-success">可用</span>
+            }
+            else
+            {
+                <span class="badge bg-warning">维护中</span>
+            }
+        </p>
+    </div>
+</div>
+
+@if (Model.Status == 0)
+{
+    <h4 class="mt-4">今日时段状态 (@ViewBag.Today.ToString("yyyy-MM-dd"))</h4>
+    <table class="table mt-2">
+        <thead class="table-light">
+            <tr>
+                <th>时段</th>
+                <th>状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var slot in allSlots)
+            {
+                <tr>
+                    <td>@slot</td>
+                    <td>
+                        @if (reservedSlots.Contains(slot))
+                        {
+                            <span class="badge bg-danger">已预约</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">可预约</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-controller="Reservation" asp-action="Create" asp-route-seatId="@Model.Id" class="btn btn-primary mt-2">预约此座位</a>
+}
+else
+{
+    <div class="alert alert-warning mt-3">该座位当前维护中，暂不可预约</div>
+}
+
+<a asp-action="List" class="btn btn-outline-secondary mt-2 ms-2">返回列表</a>

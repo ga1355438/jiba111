@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "首页";
+}
+
+<div class="text-center py-5">
+    <h1 class="display-5">欢迎使用图书馆座位预约系统</h1>
+    <p class="lead mt-3">今天是 @DateTime.Now.ToString("yyyy-MM-dd")</p>
+    <div class="mt-4">
+        <a asp-controller="Seat" asp-action="List" class="btn btn-primary btn-lg me-3">查看座位</a>
+        <a asp-controller="Reservation" asp-action="My" class="btn btn-outline-secondary btn-lg">我的预约</a>
+    </div>
+</div>
