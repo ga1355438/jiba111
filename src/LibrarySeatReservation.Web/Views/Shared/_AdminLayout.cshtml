@@ -37,41 +37,54 @@
             margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #E5E7EB;
         }
         .admin-topbar h4 { margin: 0; font-size: 20px; font-weight: 600; color: #111827; }
+        .sidebar-toggle { display: none; background: none; border: 1px solid #D1D5DB; border-radius: 4px; padding: 4px 8px; cursor: pointer; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1040; }
+        @@media (max-width: 767.98px) {
+            .admin-sidebar { position: fixed; left: -240px; top: 0; bottom: 0; z-index: 1050; transition: left 0.2s; box-shadow: none; }
+            .admin-sidebar.open { left: 0; box-shadow: 2px 0 8px rgba(0,0,0,0.15); }
+            .sidebar-toggle { display: inline-flex; align-items: center; gap: 4px; }
+            .sidebar-overlay.show { display: block; }
+            .admin-content { padding: 16px; }
+        }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     <div class="admin-wrapper">
-        <aside class="admin-sidebar">
+        <aside class="admin-sidebar" id="adminSidebar">
             <div class="sidebar-brand">
                 <a asp-controller="Admin" asp-action="SeatIndex">管理后台</a>
             </div>
             <div class="nav-section">座位管理</div>
             <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "SeatIndex" || ViewContext.RouteData.Values["action"]?.ToString() == "SeatCreate" || ViewContext.RouteData.Values["action"]?.ToString() == "SeatEdit" ? "active" : "")"
-               asp-controller="Admin" asp-action="SeatIndex">
+               asp-controller="Admin" asp-action="SeatIndex" onclick="if(window.innerWidth<768)toggleSidebar()">
                 <span class="icon">&#128204;</span> 座位管理
             </a>
             <div class="nav-section">预约管理</div>
             <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "ReservationIndex" ? "active" : "")"
-               asp-controller="Admin" asp-action="ReservationIndex">
+               asp-controller="Admin" asp-action="ReservationIndex" onclick="if(window.innerWidth<768)toggleSidebar()">
                 <span class="icon">&#128197;</span> 预约管理
             </a>
             <div class="nav-section">数据统计</div>
             <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Statistics" ? "active" : "")"
-               asp-controller="Admin" asp-action="Statistics">
+               asp-controller="Admin" asp-action="Statistics" onclick="if(window.innerWidth<768)toggleSidebar()">
                 <span class="icon">&#128200;</span> 统计
             </a>
             <div style="border-top:1px solid #E5E7EB; margin-top:16px; padding-top:16px;">
-                <a class="nav-link" asp-controller="Home" asp-action="Index">
+                <a class="nav-link" asp-controller="Home" asp-action="Index" onclick="if(window.innerWidth<768)toggleSidebar()">
                     <span class="icon">&#127968;</span> 返回用户端
                 </a>
-                <a class="nav-link" asp-controller="Admin" asp-action="Logout">
+                <a class="nav-link" asp-controller="Admin" asp-action="Logout" onclick="if(window.innerWidth<768)toggleSidebar()">
                     <span class="icon">&#128682;</span> 退出登录
                 </a>
             </div>
         </aside>
         <main class="admin-content">
             <div class="admin-topbar">
-                <h4>@ViewData["Title"]</h4>
+                <div class="d-flex align-items-center gap-2">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()">&#9776; 菜单</button>
+                    <h4>@ViewData["Title"]</h4>
+                </div>
                 @{
                     var adminUser = Context.Session.GetString("AdminUsername");
                 }
@@ -86,6 +99,14 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById('adminSidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
