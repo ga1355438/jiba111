@@ -12,7 +12,7 @@
 
 系统分为用户端和管理端。用户端面向学生，提供座位浏览、预约、查看和取消预约等功能；管理端面向图书馆管理员，提供座位管理、预约管理和统计查看等功能。
 
-技术栈：ASP.NET Core MVC (.NET 8) + Razor + SQL Server LocalDB + EF Core + Bootstrap
+技术栈：ASP.NET Core MVC (.NET 6) + Razor + SQL Server LocalDB + EF Core + Bootstrap
 
 ---
 
@@ -168,9 +168,9 @@
 | 4 | 用户端 | 预约提交 | `/Reservation/Create/{seatId}` | GET/POST |
 | 5 | 用户端 | 我的预约 | `/Reservation/My` | GET |
 | 6 | 管理端 | 登录 | `/Admin/Login` | GET/POST |
-| 7 | 管理端 | 座位管理 | `/Admin/Seat/Index` | GET |
-| 8 | 管理端 | 预约管理 | `/Admin/Reservation/Index` | GET |
-| 9 | 管理端 | 统计页 | `/Admin/Statistics/Index` | GET |
+| 7 | 管理端 | 座位管理 | `/Admin/SeatIndex` | GET |
+| 8 | 管理端 | 预约管理 | `/Admin/ReservationIndex` | GET |
+| 9 | 管理端 | 统计页 | `/Admin/Statistics` | GET |
 
 辅助路由（POST 操作，不独立成页）：
 
@@ -314,6 +314,7 @@
 | Id | int | 主键，自增 |
 | Username | string(50) | 登录名 |
 | Password | string(100) | 密码（PasswordHasher 哈希存储） |
+| CreatedAt | DateTime | 创建时间 |
 
 ---
 
@@ -457,7 +458,7 @@
 ### 假设
 
 1. SQL Server LocalDB 已安装并可用
-2. .NET 8 SDK 已安装（当前环境使用 .NET 6，API 兼容）
+2. .NET 6 SDK 已安装
 3. 开发者有基本的 C# 和 ASP.NET Core 基础
 4. 课堂项目不需要考虑并发、性能、安全等生产级问题
 

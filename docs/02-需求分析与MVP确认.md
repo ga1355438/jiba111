@@ -167,9 +167,9 @@
 | 用户端 | 我的预约 | `/Reservation/My` |
 | 用户端 | 取消预约 | `/Reservation/Cancel/{id}`（POST） |
 | 管理端 | 登录 | `/Admin/Login` |
-| 管理端 | 座位管理 | `/Admin/Seat/Index` |
-| 管理端 | 预约管理 | `/Admin/Reservation/Index` |
-| 管理端 | 统计页 | `/Admin/Statistics/Index` |
+| 管理端 | 座位管理 | `/Admin/SeatIndex` |
+| 管理端 | 预约管理 | `/Admin/ReservationIndex` |
+| 管理端 | 统计页 | `/Admin/Statistics` |
 
 ### MVP 数据表（共 3 张）
 
