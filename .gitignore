@@ -27,3 +27,10 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 .DS_Store
+
+## Node.js
+node_modules/
+
+## Playwright
+test-results/
+playwright-report/
