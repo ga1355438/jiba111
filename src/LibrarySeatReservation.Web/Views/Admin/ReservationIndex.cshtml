@@ -43,21 +43,30 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var r in Model)
+        @if (Model.Any())
+        {
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.Id</td>
+                    <td>@(r.Seat?.Name ?? "-")</td>
+                    <td>@r.UserName</td>
+                    <td>@r.ReserveDate.ToString("yyyy-MM-dd")</td>
+                    <td>@(TimeSlots.DisplayNames.ContainsKey(r.TimeSlot) ? TimeSlots.DisplayNames[r.TimeSlot] : r.TimeSlot)</td>
+                    <td>
+                        @if (r.Status == 0) { <span class="badge badge-reserved">已预约</span> }
+                        else if (r.Status == 1) { <span class="badge badge-checkedin">已签到</span> }
+                        else if (r.Status == 2) { <span class="badge badge-cancelled">已取消</span> }
+                        else { <span class="badge badge-expired">已过期</span> }
+                    </td>
+                    <td>@r.CreatedAt.ToString("MM-dd HH:mm")</td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@r.Id</td>
-                <td>@(r.Seat?.Name ?? "-")</td>
-                <td>@r.UserName</td>
-                <td>@r.ReserveDate.ToString("yyyy-MM-dd")</td>
-                <td>@(TimeSlots.DisplayNames.ContainsKey(r.TimeSlot) ? TimeSlots.DisplayNames[r.TimeSlot] : r.TimeSlot)</td>
-                <td>
-                    @if (r.Status == 0) { <span class="badge badge-reserved">已预约</span> }
-                    else if (r.Status == 1) { <span class="badge badge-checkedin">已签到</span> }
-                    else if (r.Status == 2) { <span class="badge badge-cancelled">已取消</span> }
-                    else { <span class="badge badge-expired">已过期</span> }
-                </td>
-                <td>@r.CreatedAt.ToString("MM-dd HH:mm")</td>
+                <td colspan="7" class="text-center text-muted py-4">暂无预约记录</td>
             </tr>
         }
     </tbody>

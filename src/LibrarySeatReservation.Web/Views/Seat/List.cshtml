@@ -17,32 +17,41 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var seat in Model)
+        @if (Model.Any())
+        {
+            @foreach (var seat in Model)
+            {
+                <tr>
+                    <td>@seat.Name</td>
+                    <td>@seat.Location</td>
+                    <td>@(seat.HasPower ? "有" : "无")</td>
+                    <td>
+                        @if (seat.Status == 0)
+                        {
+                            <span class="badge badge-available">可用</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-maintenance">维护中</span>
+                        }
+                    </td>
+                    <td>
+                        @if (seat.Status == 0)
+                        {
+                            <a asp-action="Detail" asp-route-id="@seat.Id" class="btn btn-primary btn-sm">查看详情</a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-secondary btn-sm" disabled>维护中</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@seat.Name</td>
-                <td>@seat.Location</td>
-                <td>@(seat.HasPower ? "有" : "无")</td>
-                <td>
-                    @if (seat.Status == 0)
-                    {
-                        <span class="badge badge-available">可用</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-maintenance">维护中</span>
-                    }
-                </td>
-                <td>
-                    @if (seat.Status == 0)
-                    {
-                        <a asp-action="Detail" asp-route-id="@seat.Id" class="btn btn-primary btn-sm">查看详情</a>
-                    }
-                    else
-                    {
-                        <button class="btn btn-secondary btn-sm" disabled>维护中</button>
-                    }
-                </td>
+                <td colspan="5" class="text-center text-muted py-4">暂无座位数据</td>
             </tr>
         }
     </tbody>
