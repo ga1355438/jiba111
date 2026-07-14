@@ -39,12 +39,15 @@
         <div class="card">
             <div class="card-header">热门座位 TOP5</div>
             <div class="card-body">
-                @if (((List<dynamic>)stats.TopSeats).Any())
+                @{
+                    var topSeats = stats.TopSeats as IEnumerable<dynamic>;
+                }
+                @if (topSeats != null && topSeats.Any())
                 {
                     <table class="table table-sm">
                         <thead><tr><th>座位名称</th><th>预约次数</th></tr></thead>
                         <tbody>
-                            @foreach (var s in (List<dynamic>)stats.TopSeats)
+                            @foreach (var s in topSeats)
                             {
                                 <tr><td>@s.SeatName</td><td>@s.Count</td></tr>
                             }
@@ -65,12 +68,15 @@
         <div class="card">
             <div class="card-header">时段分布</div>
             <div class="card-body">
-                @if (((List<dynamic>)stats.TimeSlotDist).Any())
+                @{
+                    var timeSlotDist = stats.TimeSlotDist as IEnumerable<dynamic>;
+                }
+                @if (timeSlotDist != null && timeSlotDist.Any())
                 {
                     <table class="table table-sm">
                         <thead><tr><th>时段</th><th>预约次数</th></tr></thead>
                         <tbody>
-                            @foreach (var s in (List<dynamic>)stats.TimeSlotDist)
+                            @foreach (var s in timeSlotDist)
                             {
                                 <tr>
                                     <td>@(TimeSlots.DisplayNames.ContainsKey((string)s.Slot) ? TimeSlots.DisplayNames[(string)s.Slot] : s.Slot)</td>

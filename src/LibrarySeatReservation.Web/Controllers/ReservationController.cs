@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using LibrarySeatReservation.Web.DataAccess;
 using LibrarySeatReservation.Web.Models.Entities;
 using LibrarySeatReservation.Web.Constants;
@@ -64,6 +65,16 @@ public class ReservationController : Controller
 
             await _reservationRepository.AddAsync(reservation);
             return RedirectToAction(nameof(My));
+        }
+        catch (DbUpdateException)
+        {
+            ViewBag.Seat = seat;
+            ViewBag.TimeSlots = TimeSlots.All;
+            ViewBag.DisplayNames = TimeSlots.DisplayNames;
+            ViewBag.SelectedTimeSlot = timeSlot;
+            ViewBag.Today = DateTime.Today;
+            ViewBag.Error = "该时段已被预约";
+            return View();
         }
         catch
         {

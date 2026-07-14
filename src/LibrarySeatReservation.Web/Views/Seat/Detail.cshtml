@@ -40,7 +40,7 @@
         <tbody>
             @foreach (var slot in TimeSlots.All)
             {
-                var isReserved = reservations?.Any(r => r.TimeSlot == slot && r.Status == 0) == true;
+                var isReserved = reservations?.Any(r => r.TimeSlot == slot) == true;
                 <tr>
                     <td>@TimeSlots.DisplayNames[slot]</td>
                     <td>

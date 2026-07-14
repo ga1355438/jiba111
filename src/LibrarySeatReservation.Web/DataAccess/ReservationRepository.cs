@@ -36,7 +36,7 @@ public class ReservationRepository : IReservationRepository
     {
         return await _context.Reservations
             .AsNoTracking()
-            .Where(r => r.SeatId == seatId && r.ReserveDate.Date == date.Date && r.Status != 2)
+            .Where(r => r.SeatId == seatId && r.ReserveDate.Date == date.Date)
             .ToListAsync();
     }
 
@@ -62,8 +62,7 @@ public class ReservationRepository : IReservationRepository
         return await _context.Reservations.AnyAsync(r =>
             r.SeatId == seatId &&
             r.ReserveDate.Date == date.Date &&
-            r.TimeSlot == timeSlot &&
-            r.Status == 0);
+            r.TimeSlot == timeSlot);
     }
 
     public async Task<int> GetTotalCountAsync()
