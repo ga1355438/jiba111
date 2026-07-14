@@ -16,12 +16,14 @@
 | 前端样式 | Bootstrap | 5.x |
 | 前端脚本 | jQuery | - |
 | 密码加密 | PasswordHasher | ASP.NET Core 内置 |
+| 缓存 | IMemoryCache | 5分钟过期 |
+| 容器化 | Docker | 多阶段构建 |
 
 ---
 
 ## 项目结构
 
-### 新版骨架（src/LibrarySeatReservation.Web）
+### 新版项目（src/LibrarySeatReservation.Web）
 
 ```
 src/LibrarySeatReservation.Web/
@@ -37,39 +39,59 @@ src/LibrarySeatReservation.Web/
 │   ├── AppDbContext.cs             # EF Core 数据库上下文
 │   └── SeedData.cs                 # 种子数据（20座位 + 1管理员）
 ├── DataAccess/                     # 数据访问接口与实现
-│   ├── ISeatRepository.cs
-│   ├── IReservationRepository.cs
-│   ├── IAdminUserRepository.cs
-│   ├── SeatRepository.cs
-│   ├── ReservationRepository.cs
-│   └── AdminUserRepository.cs
+│   ├── ISeatRepository.cs / SeatRepository.cs
+│   ├── IReservationRepository.cs / ReservationRepository.cs
+│   └── IAdminUserRepository.cs / AdminUserRepository.cs
 ├── Services/                       # 业务逻辑层
-│   ├── ISeatService.cs
-│   ├── IReservationService.cs
-│   ├── IAdminService.cs
-│   ├── SeatService.cs
-│   ├── ReservationService.cs
-│   └── AdminService.cs
+│   ├── ISeatService.cs / SeatService.cs
+│   ├── IReservationService.cs / ReservationService.cs
+│   └── IAdminService.cs / AdminService.cs
 ├── Helpers/
 │   └── PasswordHelper.cs           # PasswordHasher 封装
 ├── Constants/
 │   └── TimeSlots.cs                # 时段常量（5个固定时段）
-├── Views/                          # 视图层
+├── Views/                          # 视图层（10页）
 │   ├── Home/Index.cshtml
 │   ├── Seat/List.cshtml, Detail.cshtml
 │   ├── Reservation/Create.cshtml, My.cshtml
-│   ├── Admin/Login.cshtml, SeatIndex.cshtml, ReservationIndex.cshtml, Statistics.cshtml
+│   ├── Admin/Login.cshtml, SeatIndex.cshtml, SeatCreate.cshtml,
+│   │   SeatEdit.cshtml, ReservationIndex.cshtml, Statistics.cshtml
 │   └── Shared/_Layout.cshtml
 ├── Migrations/                     # EF Core 迁移
 ├── wwwroot/                        # 静态资源（CSS/JS/lib）
-├── Program.cs                      # 程序入口
+├── Program.cs                      # 程序入口（DI + Session + 自动迁移）
 ├── appsettings.json                # 配置文件
+├── Dockerfile                      # Docker 多阶段构建
+├── docker-compose.yml              # Docker Compose 配置
 └── LibrarySeatReservation.Web.csproj
 ```
 
-### 旧版完成项目（LibrarySeatSystem）
+---
 
-旧版项目位于根目录 `LibrarySeatSystem/`，使用 .NET 6，已完成全部功能开发。详见旧版 README。
+## 功能清单
+
+### 用户端
+
+| 页面 | 路由 | 功能 |
+|------|------|------|
+| 首页 | `GET /` | 欢迎语、快捷入口 |
+| 座位列表 | `GET /Seat/List?page=1` | 分页展示20个座位 |
+| 座位详情 | `GET /Seat/Detail/{id}` | 座位信息 + 5时段状态 |
+| 预约提交 | `GET/POST /Reservation/Create?seatId=&timeSlot=` | 选择日期时段，冲突校验 |
+| 我的预约 | `GET /Reservation/My` | 当前用户预约记录 |
+| 取消预约 | `POST /Reservation/Cancel/{id}` | 仅限 Status=0 |
+
+### 管理端
+
+| 页面 | 路由 | 功能 |
+|------|------|------|
+| 管理员登录 | `GET/POST /Admin/Login` | PasswordHasher 验证 |
+| 座位管理 | `GET /Admin/SeatIndex` | 座位列表 + 编辑/删除 |
+| 新增座位 | `GET/POST /Admin/SeatCreate` | 创建新座位 |
+| 编辑座位 | `GET/POST /Admin/SeatEdit/{id}` | 修改座位信息 |
+| 删除座位 | `POST /Admin/SeatDelete/{id}` | 删除座位 |
+| 预约管理 | `GET /Admin/ReservationIndex` | 按日期/状态筛选，分页 |
+| 统计 | `GET /Admin/Statistics` | 总数/今日/热门TOP5/时段分布（缓存5分钟） |
 
 ---
 
@@ -80,23 +102,6 @@ src/LibrarySeatReservation.Web/
 | .NET SDK | 8.0+ | `dotnet --version` 验证 |
 | SQL Server LocalDB | 2019+ | `sqllocaldb info` 验证 |
 | dotnet-ef | 8.0+ | `dotnet tool install --global dotnet-ef --version 8.0.0` |
-
----
-
-## 当前阶段
-
-**阶段：Sprint 0 开发准备（骨架搭建）✅ 完成**
-
-| 任务 | 状态 |
-|------|------|
-| 创建解决方案和项目 | ✅ |
-| 建立 Entity 与 DbContext | ✅ |
-| 建立 DataAccess/Service 接口与实现 | ✅ |
-| 建立首页与入口页面 | ✅ |
-| 配置 Program.cs（DI + Session） | ✅ |
-| 创建 EF Core 迁移并建库建表 | ✅ |
-| 准备最小种子数据（20座位 + 1管理员） | ✅ |
-| 编译通过（0 errors, 0 warnings） | ✅ |
 
 ---
 
@@ -125,6 +130,13 @@ dotnet ef database drop
 dotnet ef database update
 ```
 
+### Docker 运行
+
+```bash
+cd src/LibrarySeatReservation.Web
+docker-compose up -d
+```
+
 ---
 
 ## 演示账号
@@ -145,42 +157,25 @@ dotnet ef database update
 
 ---
 
-## 已实现范围（骨架阶段）
-
-### 数据库
+## 数据库
 
 | 表名 | 字段 | 种子数据 |
 |------|------|---------|
 | Seats | Id, Name, Location, HasPower, Status, CreatedAt | 20条（A/B/C/D区各5个） |
-| Reservations | Id, SeatId, UserName, ReserveDate, TimeSlot, Status, CreatedAt | 空（待Sprint 1填充） |
+| Reservations | Id, SeatId, UserName, ReserveDate, TimeSlot, Status, CreatedAt | 空 |
 | AdminUsers | Id, Username, Password, CreatedAt | 1条（admin/123456） |
-
-### 页面（骨架）
-
-| 页面 | 路由 | 状态 |
-|------|------|------|
-| 用户首页 | `/Home/Index` | ✅ 已完成 |
-| 座位列表 | `/Seat/List` | 骨架页（待实现） |
-| 座位详情 | `/Seat/Detail/{id}` | 骨架页（待实现） |
-| 预约提交 | `/Reservation/Create/{seatId}` | 骨架页（待实现） |
-| 我的预约 | `/Reservation/My` | 骨架页（待实现） |
-| 管理员登录 | `/Admin/Login` | ✅ 已完成 |
-| 座位管理 | `/Admin/SeatIndex` | 骨架页（待实现） |
-| 预约管理 | `/Admin/ReservationIndex` | 骨架页（待实现） |
-| 统计页 | `/Admin/Statistics` | 骨架页（待实现） |
 
 ---
 
-## 后续计划
+## 开发阶段
 
-| 内容 | 说明 | 预计阶段 |
-|------|------|----------|
-| Sprint 1 | 用户端核心链路（座位列表→详情→预约→我的预约） | 下一步 |
-| Sprint 2 | 管理端核心链路（登录→座位管理→预约管理→统计） | Sprint 1 之后 |
-| Sprint 3 | 性能优化、Docker 部署 | Sprint 2 之后 |
-| Sprint 4 | 收尾审计、最终交付 | Sprint 3 之后 |
-| 单元测试项目 | `LibrarySeatReservation.Web.Tests/` | 后续扩展 |
-| ViewModel 层 | `Models/ViewModels/`（当前使用 ViewBag） | 后续扩展 |
+| Sprint | 目标 | 状态 |
+|--------|------|------|
+| Sprint 0 | 骨架搭建（.NET 8, EF Core 8, DI, Session） | ✅ 完成 |
+| Sprint 1 | 用户端核心链路（座位→详情→预约→取消） | ✅ 完成 |
+| Sprint 2 | 管理端核心链路（登录→座位CRUD→预约管理→统计） | ✅ 完成 |
+| Sprint 3 | 性能优化（AsNoTracking, MemoryCache）+ Docker | ✅ 完成 |
+| Sprint 4 | 功能验证 + 文档审计 + 最终交付 | ✅ 完成 |
 
 ---
 
@@ -199,5 +194,5 @@ dotnet ef database update
 | 09 | [关键链路详细设计](docs/09-关键链路详细设计.md) | 7条链路详细设计 |
 | 10 | [开发准备与Sprint0](docs/10-开发准备与Sprint0.md) | 开发规范与Sprint规划 |
 | 11 | [开发前一致性总审计](docs/11-开发前一致性总审计.md) | 文档一致性审计 |
-| 12 | [开发起步与骨架记录](docs/12-开发起步与骨架记录.md) | 本阶段记录 |
+| 12 | [开发起步与骨架记录](docs/12-开发起步与骨架记录.md) | Sprint 0 骨架记录 |
 | - | [项目任务板与迭代记录](docs/项目任务板与迭代记录.md) | 任务跟踪 |
