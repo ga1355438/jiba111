@@ -41,11 +41,11 @@
                 @if (((List<dynamic>)stats.TopSeats).Any())
                 {
                     <table class="table table-sm">
-                        <thead><tr><th>座位ID</th><th>预约次数</th></tr></thead>
+                        <thead><tr><th>座位名称</th><th>预约次数</th></tr></thead>
                         <tbody>
                             @foreach (var s in (List<dynamic>)stats.TopSeats)
                             {
-                                <tr><td>@s.SeatId</td><td>@s.Count</td></tr>
+                                <tr><td>@s.SeatName</td><td>@s.Count</td></tr>
                             }
                         </tbody>
                     </table>

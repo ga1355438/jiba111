@@ -67,6 +67,13 @@ public class AdminController : Controller
     public async Task<IActionResult> SeatCreate(Seat seat)
     {
         if (!IsLoggedIn()) return RedirectToAction(nameof(Login));
+
+        if (await _seatRepository.ExistsByNameAsync(seat.Name))
+        {
+            ViewBag.Error = "座位编号已存在";
+            return View(seat);
+        }
+
         seat.CreatedAt = DateTime.UtcNow;
         await _seatRepository.AddAsync(seat);
         return RedirectToAction(nameof(SeatIndex));
@@ -101,6 +108,13 @@ public class AdminController : Controller
         if (!IsLoggedIn()) return RedirectToAction(nameof(Login));
         var seat = await _seatRepository.GetByIdAsync(id);
         if (seat == null) return NotFound();
+
+        if (await _seatRepository.HasReservationsAsync(id))
+        {
+            TempData["Error"] = "该座位有预约记录，无法删除";
+            return RedirectToAction(nameof(SeatIndex));
+        }
+
         await _seatRepository.DeleteAsync(id);
         return RedirectToAction(nameof(SeatIndex));
     }
@@ -146,6 +160,8 @@ public class AdminController : Controller
         if (!_cache.TryGetValue(cacheKey, out stats))
         {
             var allReservations = await _reservationRepository.GetAllAsync();
+            var seats = await _seatRepository.GetAllAsync();
+            var seatDict = seats.ToDictionary(s => s.Id, s => s.Name);
 
             stats = new
             {
@@ -156,7 +172,7 @@ public class AdminController : Controller
                     .GroupBy(r => r.SeatId)
                     .OrderByDescending(g => g.Count())
                     .Take(5)
-                    .Select(g => new { SeatId = g.Key, Count = g.Count() })
+                    .Select(g => new { SeatId = g.Key, SeatName = seatDict.GetValueOrDefault(g.Key, $"座位{g.Key}"), Count = g.Count() })
                     .ToList(),
                 TimeSlotDist = allReservations
                     .GroupBy(r => r.TimeSlot)
