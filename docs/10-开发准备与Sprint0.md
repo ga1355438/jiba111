@@ -295,7 +295,7 @@ chore: 配置 EF Core 迁移
 | 体验账号硬编码 | 张三/李四/王五，不建用户表 |
 | 分页固定10条 | 不支持自定义每页条数 |
 | 编辑座位不修改 CreatedAt | 只更新 Name, Location, HasPower, Status |
-| 统计数据实时计算 | 无缓存，每次重新查询 |
+| 统计数据缓存 | 统计页引入 5 分钟缓存（IMemoryCache），Sprint 3 实现 |
 
 ---
 
