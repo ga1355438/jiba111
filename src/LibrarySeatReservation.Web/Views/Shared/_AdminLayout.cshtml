@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 管理后台</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .admin-wrapper { display: flex; min-height: 100vh; }
+        .admin-sidebar {
+            width: 220px; background: #fff; border-right: 1px solid #E5E7EB;
+            flex-shrink: 0; padding-top: 16px;
+        }
+        .admin-sidebar .sidebar-brand {
+            padding: 0 20px 16px; font-size: 16px; font-weight: 700; color: #111827;
+            border-bottom: 1px solid #E5E7EB; margin-bottom: 8px;
+        }
+        .admin-sidebar .sidebar-brand a { color: #111827; text-decoration: none; }
+        .admin-sidebar .nav-link {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 20px; font-size: 14px; color: #374151; text-decoration: none;
+            border-left: 3px solid transparent; transition: all 0.15s;
+        }
+        .admin-sidebar .nav-link:hover { background: #F9FAFB; }
+        .admin-sidebar .nav-link.active {
+            background: #EFF6FF; color: #2563EB; border-left-color: #2563EB; font-weight: 500;
+        }
+        .admin-sidebar .nav-link .icon { width: 18px; text-align: center; }
+        .admin-sidebar .nav-section {
+            padding: 8px 20px 4px; font-size: 12px; color: #6B7280;
+            text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;
+        }
+        .admin-content { flex: 1; padding: 24px 32px; background: #F9FAFB; overflow-y: auto; }
+        .admin-topbar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #E5E7EB;
+        }
+        .admin-topbar h4 { margin: 0; font-size: 20px; font-weight: 600; color: #111827; }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <aside class="admin-sidebar">
+            <div class="sidebar-brand">
+                <a asp-controller="Admin" asp-action="SeatIndex">管理后台</a>
+            </div>
+            <div class="nav-section">座位管理</div>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "SeatIndex" || ViewContext.RouteData.Values["action"]?.ToString() == "SeatCreate" || ViewContext.RouteData.Values["action"]?.ToString() == "SeatEdit" ? "active" : "")"
+               asp-controller="Admin" asp-action="SeatIndex">
+                <span class="icon">&#128204;</span> 座位管理
+            </a>
+            <div class="nav-section">预约管理</div>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "ReservationIndex" ? "active" : "")"
+               asp-controller="Admin" asp-action="ReservationIndex">
+                <span class="icon">&#128197;</span> 预约管理
+            </a>
+            <div class="nav-section">数据统计</div>
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Statistics" ? "active" : "")"
+               asp-controller="Admin" asp-action="Statistics">
+                <span class="icon">&#128200;</span> 统计
+            </a>
+            <div style="border-top:1px solid #E5E7EB; margin-top:16px; padding-top:16px;">
+                <a class="nav-link" asp-controller="Home" asp-action="Index">
+                    <span class="icon">&#127968;</span> 返回用户端
+                </a>
+                <a class="nav-link" asp-controller="Admin" asp-action="Logout">
+                    <span class="icon">&#128682;</span> 退出登录
+                </a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="admin-topbar">
+                <h4>@ViewData["Title"]</h4>
+                @{
+                    var adminUser = Context.Session.GetString("AdminUsername");
+                }
+                @if (!string.IsNullOrEmpty(adminUser))
+                {
+                    <span class="text-muted">管理员：@adminUser</span>
+                }
+            </div>
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

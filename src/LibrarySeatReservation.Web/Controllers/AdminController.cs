@@ -125,20 +125,13 @@ public class AdminController : Controller
     {
         if (!IsLoggedIn()) return RedirectToAction(nameof(Login));
 
-        var reservations = await _reservationRepository.GetAllAsync();
-
-        if (date.HasValue)
-            reservations = reservations.Where(r => r.ReserveDate.Date == date.Value.Date).ToList();
-
-        if (status.HasValue)
-            reservations = reservations.Where(r => r.Status == status.Value).ToList();
-
-        reservations = reservations.OrderByDescending(r => r.ReserveDate).ToList();
-
         int pageSize = 15;
-        int totalItems = reservations.Count;
+        int totalItems = await _reservationRepository.GetFilteredCountAsync(date, status);
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-        var paged = reservations.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        if (page < 1) page = 1;
+        if (page > totalPages && totalPages > 0) page = totalPages;
+
+        var paged = await _reservationRepository.GetFilteredPageAsync(date, status, (page - 1) * pageSize, pageSize);
 
         ViewBag.CurrentPage = page;
         ViewBag.TotalPages = totalPages;
@@ -159,26 +152,18 @@ public class AdminController : Controller
         object? stats;
         if (!_cache.TryGetValue(cacheKey, out stats))
         {
-            var allReservations = await _reservationRepository.GetAllAsync();
+            var topSeats = await _reservationRepository.GetTopSeatsAsync(5);
+            var timeSlotDist = await _reservationRepository.GetTimeSlotDistAsync();
             var seats = await _seatRepository.GetAllAsync();
             var seatDict = seats.ToDictionary(s => s.Id, s => s.Name);
 
             stats = new
             {
-                TotalCount = allReservations.Count,
-                TodayCount = allReservations.Count(r => r.ReserveDate.Date == DateTime.Today && r.Status != 2),
-                ActiveCount = allReservations.Count(r => r.Status == 0),
-                TopSeats = allReservations
-                    .GroupBy(r => r.SeatId)
-                    .OrderByDescending(g => g.Count())
-                    .Take(5)
-                    .Select(g => new { SeatId = g.Key, SeatName = seatDict.GetValueOrDefault(g.Key, $"座位{g.Key}"), Count = g.Count() })
-                    .ToList(),
-                TimeSlotDist = allReservations
-                    .GroupBy(r => r.TimeSlot)
-                    .OrderBy(g => g.Key)
-                    .Select(g => new { Slot = g.Key, Count = g.Count() })
-                    .ToList()
+                TotalCount = await _reservationRepository.GetTotalCountAsync(),
+                TodayCount = await _reservationRepository.GetTodayCountAsync(),
+                ActiveCount = await _reservationRepository.GetActiveCountAsync(),
+                TopSeats = topSeats.Select(t => new { SeatId = t.SeatId, SeatName = seatDict.GetValueOrDefault(t.SeatId, $"座位{t.SeatId}"), Count = t.Count }).ToList(),
+                TimeSlotDist = timeSlotDist.Select(t => new { Slot = t.TimeSlot, Count = t.Count }).ToList()
             };
 
             MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
