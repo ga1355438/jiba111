@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 图书馆座位预约系统</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">座位预约系统</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Seat" asp-action="List">座位列表</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Reservation" asp-action="My">我的预约</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            @{
+                                var currentUser = Context.Session.GetString("CurrentUserName") ?? "张三";
+                            }
+                            <span class="nav-link text-light">当前用户：@currentUser</span>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">切换账号</a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#" onclick="switchUser('张三')">张三</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="switchUser('李四')">李四</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="switchUser('王五')">王五</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Admin" asp-action="Login">管理端</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container text-center">
+            &copy; 2026 图书馆座位预约系统
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function switchUser(userName) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/Reservation/SwitchUser';
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'userName';
+            input.value = userName;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
