@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using LibrarySeatReservation.Web.Services;
 using LibrarySeatReservation.Web.DataAccess;
 using LibrarySeatReservation.Web.Models.Entities;
@@ -10,15 +11,18 @@ public class AdminController : Controller
     private readonly IAdminService _adminService;
     private readonly ISeatRepository _seatRepository;
     private readonly IReservationRepository _reservationRepository;
+    private readonly IMemoryCache _cache;
 
     public AdminController(
         IAdminService adminService,
         ISeatRepository seatRepository,
-        IReservationRepository reservationRepository)
+        IReservationRepository reservationRepository,
+        IMemoryCache cache)
     {
         _adminService = adminService;
         _seatRepository = seatRepository;
         _reservationRepository = reservationRepository;
+        _cache = cache;
     }
 
     public IActionResult Login() => View();
@@ -137,25 +141,36 @@ public class AdminController : Controller
     {
         if (!IsLoggedIn()) return RedirectToAction(nameof(Login));
 
-        var allReservations = await _reservationRepository.GetAllAsync();
-
-        var stats = new
+        var cacheKey = "StatisticsData";
+        object? stats;
+        if (!_cache.TryGetValue(cacheKey, out stats))
         {
-            TotalCount = allReservations.Count,
-            TodayCount = allReservations.Count(r => r.ReserveDate.Date == DateTime.Today && r.Status != 2),
-            ActiveCount = allReservations.Count(r => r.Status == 0),
-            TopSeats = allReservations
-                .GroupBy(r => r.SeatId)
-                .OrderByDescending(g => g.Count())
-                .Take(5)
-                .Select(g => new { SeatId = g.Key, Count = g.Count() })
-                .ToList(),
-            TimeSlotDist = allReservations
-                .GroupBy(r => r.TimeSlot)
-                .OrderBy(g => g.Key)
-                .Select(g => new { Slot = g.Key, Count = g.Count() })
-                .ToList()
-        };
+            var allReservations = await _reservationRepository.GetAllAsync();
+
+            stats = new
+            {
+                TotalCount = allReservations.Count,
+                TodayCount = allReservations.Count(r => r.ReserveDate.Date == DateTime.Today && r.Status != 2),
+                ActiveCount = allReservations.Count(r => r.Status == 0),
+                TopSeats = allReservations
+                    .GroupBy(r => r.SeatId)
+                    .OrderByDescending(g => g.Count())
+                    .Take(5)
+                    .Select(g => new { SeatId = g.Key, Count = g.Count() })
+                    .ToList(),
+                TimeSlotDist = allReservations
+                    .GroupBy(r => r.TimeSlot)
+                    .OrderBy(g => g.Key)
+                    .Select(g => new { Slot = g.Key, Count = g.Count() })
+                    .ToList()
+            };
+
+            MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            };
+            _cache.Set(cacheKey, stats, options);
+        }
 
         ViewBag.Stats = stats;
         return View();

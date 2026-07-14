@@ -16,6 +16,7 @@ public class ReservationRepository : IReservationRepository
     public async Task<List<Reservation>> GetByUserAsync(string userName)
     {
         return await _context.Reservations
+            .AsNoTracking()
             .Include(r => r.Seat)
             .Where(r => r.UserName == userName)
             .OrderByDescending(r => r.ReserveDate)
@@ -25,6 +26,7 @@ public class ReservationRepository : IReservationRepository
     public async Task<List<Reservation>> GetAllAsync()
     {
         return await _context.Reservations
+            .AsNoTracking()
             .Include(r => r.Seat)
             .OrderByDescending(r => r.ReserveDate)
             .ToListAsync();
@@ -33,13 +35,14 @@ public class ReservationRepository : IReservationRepository
     public async Task<List<Reservation>> GetBySeatAndDateAsync(int seatId, DateTime date)
     {
         return await _context.Reservations
+            .AsNoTracking()
             .Where(r => r.SeatId == seatId && r.ReserveDate.Date == date.Date && r.Status != 2)
             .ToListAsync();
     }
 
     public async Task<Reservation?> GetByIdAsync(int id)
     {
-        return await _context.Reservations.Include(r => r.Seat).FirstOrDefaultAsync(r => r.Id == id);
+        return await _context.Reservations.AsNoTracking().Include(r => r.Seat).FirstOrDefaultAsync(r => r.Id == id);
     }
 
     public async Task AddAsync(Reservation reservation)

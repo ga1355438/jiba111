@@ -15,7 +15,7 @@ public class SeatRepository : ISeatRepository
 
     public async Task<List<Seat>> GetAllAsync()
     {
-        return await _context.Seats.OrderBy(s => s.Id).ToListAsync();
+        return await _context.Seats.AsNoTracking().OrderBy(s => s.Id).ToListAsync();
     }
 
     public async Task<Seat?> GetByIdAsync(int id)

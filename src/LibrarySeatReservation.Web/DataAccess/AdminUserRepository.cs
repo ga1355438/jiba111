@@ -15,6 +15,6 @@ public class AdminUserRepository : IAdminUserRepository
 
     public async Task<AdminUser?> GetByUsernameAsync(string username)
     {
-        return await _context.AdminUsers.FirstOrDefaultAsync(a => a.Username == username);
+        return await _context.AdminUsers.AsNoTracking().FirstOrDefaultAsync(a => a.Username == username);
     }
 }
