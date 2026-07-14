@@ -5,6 +5,12 @@
 }
 
 <h2>我的预约</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 <p>当前用户：<strong>@ViewBag.CurrentUserName</strong></p>
 
 @if (!Model.Any())
@@ -33,15 +39,15 @@ else
                     <td>
                         @if (r.Status == 0)
                         {
-                            <span class="badge bg-success">已预约</span>
+                            <span class="badge badge-reserved">已预约</span>
                         }
                         else if (r.Status == 2)
                         {
-                            <span class="badge bg-secondary">已取消</span>
+                            <span class="badge badge-cancelled">已取消</span>
                         }
                         else
                         {
-                            <span class="badge bg-info">状态@r.Status</span>
+                            <span class="badge badge-checkedin">状态@r.Status</span>
                         }
                     </td>
                     <td>

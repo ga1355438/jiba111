@@ -74,9 +74,17 @@ public class AdminController : Controller
             return View(seat);
         }
 
-        seat.CreatedAt = DateTime.UtcNow;
-        await _seatRepository.AddAsync(seat);
-        return RedirectToAction(nameof(SeatIndex));
+        try
+        {
+            seat.CreatedAt = DateTime.UtcNow;
+            await _seatRepository.AddAsync(seat);
+            return RedirectToAction(nameof(SeatIndex));
+        }
+        catch
+        {
+            ViewBag.Error = "操作失败，请稍后重试";
+            return View(seat);
+        }
     }
 
     public async Task<IActionResult> SeatEdit(int id)
@@ -98,8 +106,17 @@ public class AdminController : Controller
         existing.Location = seat.Location;
         existing.HasPower = seat.HasPower;
         existing.Status = seat.Status;
-        await _seatRepository.UpdateAsync(existing);
-        return RedirectToAction(nameof(SeatIndex));
+
+        try
+        {
+            await _seatRepository.UpdateAsync(existing);
+            return RedirectToAction(nameof(SeatIndex));
+        }
+        catch
+        {
+            ViewBag.Error = "操作失败，请稍后重试";
+            return View(existing);
+        }
     }
 
     [HttpPost]
@@ -115,8 +132,16 @@ public class AdminController : Controller
             return RedirectToAction(nameof(SeatIndex));
         }
 
-        await _seatRepository.DeleteAsync(id);
-        return RedirectToAction(nameof(SeatIndex));
+        try
+        {
+            await _seatRepository.DeleteAsync(id);
+            return RedirectToAction(nameof(SeatIndex));
+        }
+        catch
+        {
+            TempData["Error"] = "删除失败，请稍后重试";
+            return RedirectToAction(nameof(SeatIndex));
+        }
     }
 
     // ========== 预约管理 ==========

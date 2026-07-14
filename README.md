@@ -56,7 +56,7 @@ src/LibrarySeatReservation.Web/
 │   ├── Reservation/Create.cshtml, My.cshtml
 │   ├── Admin/Login.cshtml, SeatIndex.cshtml, SeatCreate.cshtml,
 │   │   SeatEdit.cshtml, ReservationIndex.cshtml, Statistics.cshtml
-│   └── Shared/_Layout.cshtml
+│   └── Shared/_Layout.cshtml, _AdminLayout.cshtml
 ├── Migrations/                     # EF Core 迁移
 ├── wwwroot/                        # 静态资源（CSS/JS/lib）
 ├── Program.cs                      # 程序入口（DI + Session + 自动迁移）
@@ -86,12 +86,12 @@ src/LibrarySeatReservation.Web/
 | 页面 | 路由 | 功能 |
 |------|------|------|
 | 管理员登录 | `GET/POST /Admin/Login` | PasswordHasher 验证 |
-| 座位管理 | `GET /Admin/SeatIndex` | 座位列表 + 编辑/删除 |
-| 新增座位 | `GET/POST /Admin/SeatCreate` | 创建新座位 |
+| 座位管理 | `GET /Admin/SeatIndex` | 座位列表 + 编辑/删除（编号唯一性校验） |
+| 新增座位 | `GET/POST /Admin/SeatCreate` | 创建新座位（编号重复提示） |
 | 编辑座位 | `GET/POST /Admin/SeatEdit/{id}` | 修改座位信息 |
-| 删除座位 | `POST /Admin/SeatDelete/{id}` | 删除座位 |
-| 预约管理 | `GET /Admin/ReservationIndex` | 按日期/状态筛选，分页 |
-| 统计 | `GET /Admin/Statistics` | 总数/今日/热门TOP5/时段分布（缓存5分钟） |
+| 删除座位 | `POST /Admin/SeatDelete/{id}` | 删除座位（有预约记录时阻止） |
+| 预约管理 | `GET /Admin/ReservationIndex` | 按日期/状态筛选，数据库级分页 |
+| 统计 | `GET /Admin/Statistics` | 总数/今日/热门TOP5(显示名称)/时段分布（缓存5分钟） |
 
 ---
 

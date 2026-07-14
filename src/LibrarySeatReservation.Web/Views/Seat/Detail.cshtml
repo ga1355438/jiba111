@@ -16,11 +16,11 @@
             <strong>状态：</strong>
             @if (Model.Status == 0)
             {
-                <span class="badge bg-success">可用</span>
+                <span class="badge badge-available">可用</span>
             }
             else
             {
-                <span class="badge bg-warning">维护中</span>
+                <span class="badge badge-maintenance">维护中</span>
             }
         </p>
     </div>
@@ -46,11 +46,11 @@
                     <td>
                         @if (isReserved)
                         {
-                            <span class="badge bg-danger">已预约</span>
+                            <span class="badge badge-reserved">已预约</span>
                         }
                         else
                         {
-                            <span class="badge bg-success">可预约</span>
+                            <span class="badge badge-available">可预约</span>
                         }
                     </td>
                     <td>

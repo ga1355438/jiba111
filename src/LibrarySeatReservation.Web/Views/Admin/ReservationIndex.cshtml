@@ -52,10 +52,10 @@
                 <td>@r.ReserveDate.ToString("yyyy-MM-dd")</td>
                 <td>@(TimeSlots.DisplayNames.ContainsKey(r.TimeSlot) ? TimeSlots.DisplayNames[r.TimeSlot] : r.TimeSlot)</td>
                 <td>
-                    @if (r.Status == 0) { <span class="badge bg-success">已预约</span> }
-                    else if (r.Status == 1) { <span class="badge bg-info">已签到</span> }
-                    else if (r.Status == 2) { <span class="badge bg-secondary">已取消</span> }
-                    else { <span class="badge bg-warning">已过期</span> }
+                    @if (r.Status == 0) { <span class="badge badge-reserved">已预约</span> }
+                    else if (r.Status == 1) { <span class="badge badge-checkedin">已签到</span> }
+                    else if (r.Status == 2) { <span class="badge badge-cancelled">已取消</span> }
+                    else { <span class="badge badge-expired">已过期</span> }
                 </td>
                 <td>@r.CreatedAt.ToString("MM-dd HH:mm")</td>
             </tr>

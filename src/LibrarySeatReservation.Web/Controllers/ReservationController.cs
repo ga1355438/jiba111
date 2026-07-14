@@ -50,18 +50,31 @@ public class ReservationController : Controller
             return View();
         }
 
-        var reservation = new Reservation
+        try
         {
-            SeatId = seatId,
-            UserName = userName,
-            ReserveDate = reserveDate.Date,
-            TimeSlot = timeSlot,
-            Status = 0,
-            CreatedAt = DateTime.UtcNow
-        };
+            var reservation = new Reservation
+            {
+                SeatId = seatId,
+                UserName = userName,
+                ReserveDate = reserveDate.Date,
+                TimeSlot = timeSlot,
+                Status = 0,
+                CreatedAt = DateTime.UtcNow
+            };
 
-        await _reservationRepository.AddAsync(reservation);
-        return RedirectToAction(nameof(My));
+            await _reservationRepository.AddAsync(reservation);
+            return RedirectToAction(nameof(My));
+        }
+        catch
+        {
+            ViewBag.Seat = seat;
+            ViewBag.TimeSlots = TimeSlots.All;
+            ViewBag.DisplayNames = TimeSlots.DisplayNames;
+            ViewBag.SelectedTimeSlot = timeSlot;
+            ViewBag.Today = DateTime.Today;
+            ViewBag.Error = "提交失败，请稍后重试";
+            return View();
+        }
     }
 
     public async Task<IActionResult> My()
@@ -82,10 +95,17 @@ public class ReservationController : Controller
         if (reservation.UserName != userName) return Forbid();
         if (reservation.Status != 0) return BadRequest();
 
-        reservation.Status = 2;
-        await _reservationRepository.UpdateAsync(reservation);
-
-        return RedirectToAction(nameof(My));
+        try
+        {
+            reservation.Status = 2;
+            await _reservationRepository.UpdateAsync(reservation);
+            return RedirectToAction(nameof(My));
+        }
+        catch
+        {
+            TempData["Error"] = "取消失败，请稍后重试";
+            return RedirectToAction(nameof(My));
+        }
     }
 
     [HttpPost]
