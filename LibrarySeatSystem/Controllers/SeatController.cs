@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LibrarySeatSystem.Data;
 using LibrarySeatSystem.Models.Entities;
+using LibrarySeatSystem.Models.Enums;
 
 namespace LibrarySeatSystem.Controllers;
 
@@ -22,6 +23,7 @@ public class SeatController : Controller
 
         ViewBag.CurrentPage = page;
         ViewBag.TotalPages = (int)Math.Ceiling(total / (double)pageSize);
+        ViewBag.TotalCount = total;
         return View(seats);
     }
 
@@ -32,7 +34,7 @@ public class SeatController : Controller
 
         var today = DateTime.Today;
         var reservations = await _context.Reservations
-            .Where(r => r.SeatId == id && r.ReserveDate == today && r.Status == 0)
+            .Where(r => r.SeatId == id && r.ReserveDate == today && r.Status == ReservationStatus.Reserved)
             .Select(r => r.TimeSlot)
             .ToListAsync();
 

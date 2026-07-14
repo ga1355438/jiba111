@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using LibrarySeatSystem.Models.Enums;
 
 namespace LibrarySeatSystem.Models.Entities;
 
@@ -16,7 +17,7 @@ public class Seat
 
     public bool HasPower { get; set; }
 
-    public int Status { get; set; }
+    public SeatStatus Status { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

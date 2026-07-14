@@ -5,62 +5,65 @@
     var allSlots = new[] { "08:00-10:00", "10:00-12:00", "14:00-16:00", "16:00-18:00", "19:00-21:00" };
 }
 
-<h2>座位详情</h2>
+<a asp-action="List" style="display: inline-flex; align-items: center; gap: 4px; margin-bottom: 16px; font-size: 14px;">&larr; 返回列表</a>
 
-<div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title">@Model.Name</h5>
-        <p><strong>位置：</strong>@Model.Location</p>
-        <p><strong>电源：</strong>@(Model.HasPower ? "有" : "无")</p>
-        <p>
-            <strong>状态：</strong>
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+    <!-- 左侧：座位信息卡片 -->
+    <div class="card-custom">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h2 style="margin: 0;">@Model.Name</h2>
             @if (Model.Status == 0)
             {
-                <span class="badge bg-success">可用</span>
+                <span class="badge badge-available">可用</span>
             }
             else
             {
-                <span class="badge bg-warning">维护中</span>
+                <span class="badge badge-maintenance">维护中</span>
             }
-        </p>
+        </div>
+        <div style="margin-bottom: 16px;">
+            <div style="font-size: 14px; font-weight: 500; color: var(--text-body); margin-bottom: 4px;">位置</div>
+            <div>@Model.Location</div>
+        </div>
+        <div style="margin-bottom: 16px;">
+            <div style="font-size: 14px; font-weight: 500; color: var(--text-body); margin-bottom: 4px;">电源</div>
+            <div>@(Model.HasPower ? "有" : "无")</div>
+        </div>
+        <div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--text-body); margin-bottom: 4px;">状态说明</div>
+            <div style="font-size: 14px; color: var(--text-muted);">@(Model.Status == 0 ? "该座位当前可预约" : "维护中，暂不可预约")</div>
+        </div>
     </div>
-</div>
 
-@if (Model.Status == 0)
-{
-    <h4 class="mt-4">今日时段状态 (@ViewBag.Today.ToString("yyyy-MM-dd"))</h4>
-    <table class="table mt-2">
-        <thead class="table-light">
-            <tr>
-                <th>时段</th>
-                <th>状态</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var slot in allSlots)
-            {
-                <tr>
-                    <td>@slot</td>
-                    <td>
+    <!-- 右侧：时段状态 -->
+    <div class="card-custom">
+        <h3 style="margin-bottom: 16px;">今日时段预约状态 (@ViewBag.Today.ToString("yyyy-MM-dd"))</h3>
+        @if (Model.Status == 0)
+        {
+            <div class="time-slots">
+                @foreach (var slot in allSlots)
+                {
+                    <div class="time-slot">
+                        <span style="font-size: 14px; font-weight: 500; color: var(--text-body);">@slot</span>
                         @if (reservedSlots.Contains(slot))
                         {
-                            <span class="badge bg-danger">已预约</span>
+                            <span class="badge badge-reserved">已占用</span>
                         }
                         else
                         {
-                            <span class="badge bg-success">可预约</span>
+                            <span class="badge badge-bookable">可预约</span>
                         }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    </div>
+                }
+            </div>
 
-    <a asp-controller="Reservation" asp-action="Create" asp-route-seatId="@Model.Id" class="btn btn-primary mt-2">预约此座位</a>
-}
-else
-{
-    <div class="alert alert-warning mt-3">该座位当前维护中，暂不可预约</div>
-}
-
-<a asp-action="List" class="btn btn-outline-secondary mt-2 ms-2">返回列表</a>
+            <div style="margin-top: 24px;">
+                <a asp-controller="Reservation" asp-action="Create" asp-route-seatId="@Model.Id" class="btn btn-primary w-100">预约此座位</a>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning" style="margin-bottom: 0;">该座位当前维护中，暂不可预约</div>
+        }
+    </div>
+</div>

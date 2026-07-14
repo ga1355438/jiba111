@@ -3,58 +3,93 @@
     ViewData["Title"] = "座位列表";
 }
 
-<h2>座位列表</h2>
+<div class="page-header">
+    <h1>座位列表</h1>
+    <span style="font-size: 14px; color: var(--text-muted);">共 @ViewBag.TotalCount 个座位</span>
+</div>
 
-<table class="table table-striped table-hover mt-3">
-    <thead class="table-dark">
-        <tr>
-            <th>座位编号</th>
-            <th>位置</th>
-            <th>电源</th>
-            <th>状态</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var seat in Model)
-        {
+<!-- 桌面端表格 -->
+<div class="card-custom table-responsive">
+    <table class="table-custom">
+        <thead>
             <tr>
-                <td>@seat.Name</td>
-                <td>@seat.Location</td>
-                <td>@(seat.HasPower ? "有" : "无")</td>
-                <td>
-                    @if (seat.Status == 0)
-                    {
-                        <span class="badge bg-success">可用</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-warning">维护中</span>
-                    }
-                </td>
-                <td>
-                    @if (seat.Status == 0)
-                    {
-                        <a asp-action="Detail" asp-route-id="@seat.Id" class="btn btn-sm btn-outline-primary">查看详情</a>
-                    }
-                    else
-                    {
-                        <button class="btn btn-sm btn-outline-secondary" disabled>查看详情</button>
-                    }
-                </td>
+                <th>编号</th>
+                <th>位置</th>
+                <th>电源</th>
+                <th>状态</th>
+                <th>操作</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var seat in Model)
+            {
+                <tr>
+                    <td>@seat.Name</td>
+                    <td>@seat.Location</td>
+                    <td>@(seat.HasPower ? "有" : "无")</td>
+                    <td>
+                        @if (seat.Status == 0)
+                        {
+                            <span class="badge badge-available">可用</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-maintenance">维护中</span>
+                        }
+                    </td>
+                    <td>
+                        @if (seat.Status == 0)
+                        {
+                            <a asp-action="Detail" asp-route-id="@seat.Id" class="btn btn-sm btn-outline-primary">查看详情</a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-outline-secondary" disabled>查看详情</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- 手机端卡片 -->
+<div class="mobile-cards" style="display: none;">
+    @foreach (var seat in Model)
+    {
+        <div class="card-custom mb-3">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <span style="font-size: 16px; font-weight: 600; color: var(--text-title);">@seat.Name</span>
+                @if (seat.Status == 0)
+                {
+                    <span class="badge badge-available">可用</span>
+                }
+                else
+                {
+                    <span class="badge badge-maintenance">维护中</span>
+                }
+            </div>
+            <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">@seat.Location | 电源：@(seat.HasPower ? "有" : "无")</div>
+            @if (seat.Status == 0)
+            {
+                <a asp-action="Detail" asp-route-id="@seat.Id" class="btn btn-outline-primary btn-sm w-100">查看详情</a>
+            }
+            else
+            {
+                <button class="btn btn-outline-secondary btn-sm w-100" disabled>查看详情</button>
+            }
+        </div>
+    }
+</div>
 
 @if (ViewBag.TotalPages > 1)
 {
     <nav>
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center mt-4">
             @for (int i = 1; i <= ViewBag.TotalPages; i++)
             {
                 <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                    <a class="page-link" asp-action="List" asp-route-page="@i">@i</a>
+                    <a class="page-link" asp-action="List" asp-route-page="@i" style="@(i == ViewBag.CurrentPage ? "background-color: var(--primary); border-color: var(--primary);" : "")">@i</a>
                 </li>
             }
         </ul>

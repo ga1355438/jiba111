@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户首页 - 图书馆座位预约系统</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="top-nav">
+    <a href="index.html" class="logo">图书馆座位预约</a>
+    <div class="nav-items">
+      <a href="index.html" class="nav-item active">首页</a>
+      <a href="seat-list.html" class="nav-item">座位列表</a>
+      <a href="my-reservations.html" class="nav-item">我的预约</a>
+      <a href="../admin/login.html" class="nav-item">管理员入口</a>
+    </div>
+  </nav>
+
+  <!-- 页面内容 -->
+  <div class="page-content">
+    <div class="container">
+      <!-- 欢迎区域 -->
+      <div class="card" style="max-width: 600px; margin: 48px auto; text-align: center; padding: 48px 24px;">
+        <h1 style="margin-bottom: 8px;">欢迎使用图书馆座位预约系统</h1>
+        <p class="small" style="margin-bottom: 24px;">当前日期：2026年7月14日 星期二</p>
+        <p class="small" style="margin-bottom: 32px;">当前体验账号：<strong>张三</strong></p>
+
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <a href="seat-list.html" class="btn btn-primary" style="min-width: 160px;">查看座位</a>
+          <a href="my-reservations.html" class="btn btn-outline" style="min-width: 160px;">我的预约</a>
+        </div>
+      </div>
+
+      <!-- 快捷信息 -->
+      <div class="info-grid" style="max-width: 600px; margin: 0 auto;">
+        <div class="info-item">
+          <div class="info-label">总座位数</div>
+          <div class="info-value">20</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">可预约</div>
+          <div class="info-value text-success">18</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">维护中</div>
+          <div class="info-value text-warning">2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部安全留白 -->
+  <div style="height: 24px;"></div>
+</body>
+</html>

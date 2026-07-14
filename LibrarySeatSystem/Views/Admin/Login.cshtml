@@ -2,21 +2,23 @@
     ViewData["Title"] = "管理员登录";
 }
 
-<h2>管理员登录</h2>
+<div class="card-custom mx-auto mt-5" style="max-width: 400px; padding: 32px;">
+    <h2 style="text-align: center; margin-bottom: 24px;">管理员登录</h2>
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger mt-3">@ViewBag.Error</div>
-}
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
 
-<form asp-action="Login" method="post" class="mt-3" style="max-width: 400px;">
-    <div class="mb-3">
-        <label class="form-label">用户名</label>
-        <input type="text" name="username" class="form-control" required />
-    </div>
-    <div class="mb-3">
-        <label class="form-label">密码</label>
-        <input type="password" name="password" class="form-control" required />
-    </div>
-    <button type="submit" class="btn btn-primary">登录</button>
-</form>
+    <form asp-action="Login" method="post">
+        <div class="mb-3">
+            <label class="form-label">用户名</label>
+            <input type="text" name="username" class="form-control" placeholder="请输入用户名" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">密码</label>
+            <input type="password" name="password" class="form-control" placeholder="请输入密码" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100" style="margin-top: 16px;">登录</button>
+    </form>
+</div>

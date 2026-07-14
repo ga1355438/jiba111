@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>统计 - 图书馆座位预约系统</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="admin-nav">
+    <a href="../static-v1/index.html" class="logo">图书馆座位预约</a>
+    <div class="nav-items">
+      <a href="seat.html" class="nav-item">座位管理</a>
+      <a href="reservation.html" class="nav-item">预约管理</a>
+      <a href="statistics.html" class="nav-item active">统计</a>
+      <a href="login.html" class="nav-item">退出登录</a>
+    </div>
+  </nav>
+
+  <!-- 页面内容 -->
+  <div class="page-content">
+    <div class="container">
+      <h1 style="margin-bottom: 24px;">统计</h1>
+
+      <!-- 数据卡片 -->
+      <div class="info-grid">
+        <div class="data-card">
+          <div class="data-card-value">156</div>
+          <div class="data-card-label">总预约数</div>
+        </div>
+        <div class="data-card">
+          <div class="data-card-value text-primary">23</div>
+          <div class="data-card-label">今日预约数</div>
+        </div>
+        <div class="data-card">
+          <div class="data-card-value text-success">18</div>
+          <div class="data-card-label">有效预约数</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <!-- 热门座位 TOP5 -->
+        <div class="card">
+          <h3 style="margin-bottom: 16px;">热门座位 TOP5</h3>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>排名</th>
+                  <th>座位编号</th>
+                  <th>预约次数</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>A-01</td>
+                  <td>45</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>B-01</td>
+                  <td>38</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>C-01</td>
+                  <td>32</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>A-02</td>
+                  <td>28</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>B-03</td>
+                  <td>25</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 时段分布 -->
+        <div class="card">
+          <h3 style="margin-bottom: 16px;">时段分布</h3>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>时段</th>
+                  <th>预约数</th>
+                  <th>占比</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>08:00-10:00</td>
+                  <td>42</td>
+                  <td>26.9%</td>
+                </tr>
+                <tr>
+                  <td>10:00-12:00</td>
+                  <td>38</td>
+                  <td>24.4%</td>
+                </tr>
+                <tr>
+                  <td>14:00-16:00</td>
+                  <td>35</td>
+                  <td>22.4%</td>
+                </tr>
+                <tr>
+                  <td>16:00-18:00</td>
+                  <td>28</td>
+                  <td>17.9%</td>
+                </tr>
+                <tr>
+                  <td>19:00-21:00</td>
+                  <td>13</td>
+                  <td>8.3%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 空状态示例（隐藏，可用于展示） -->
+      <div class="card hidden">
+        <div class="empty-state">
+          <div class="empty-state-icon">📊</div>
+          <div class="empty-state-text">暂无数据</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部安全留白 -->
+  <div style="height: 24px;"></div>
+</body>
+</html>

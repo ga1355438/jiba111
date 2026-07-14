@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>座位管理 - 图书馆座位预约系统</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="admin-nav">
+    <a href="../static-v1/index.html" class="logo">图书馆座位预约</a>
+    <div class="nav-items">
+      <a href="seat.html" class="nav-item active">座位管理</a>
+      <a href="reservation.html" class="nav-item">预约管理</a>
+      <a href="statistics.html" class="nav-item">统计</a>
+      <a href="login.html" class="nav-item">退出登录</a>
+    </div>
+  </nav>
+
+  <!-- 页面内容 -->
+  <div class="page-content">
+    <div class="container">
+      <!-- 页面标题 -->
+      <div class="page-header">
+        <h1>座位管理</h1>
+        <button class="btn btn-success" onclick="document.getElementById('seatFormModal').classList.add('show')">+ 新增座位</button>
+      </div>
+
+      <!-- 桌面端表格 -->
+      <div class="card desktop-only">
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>编号</th>
+                <th>位置</th>
+                <th>电源</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A-01</td>
+                <td>三楼靠窗</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td>
+                  <div class="actions">
+                    <button class="btn btn-outline btn-sm">编辑</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="document.getElementById('deleteModal').classList.add('show')">删除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>A-02</td>
+                <td>三楼靠窗</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td>
+                  <div class="actions">
+                    <button class="btn btn-outline btn-sm">编辑</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="document.getElementById('deleteModal').classList.add('show')">删除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>A-03</td>
+                <td>三楼靠窗</td>
+                <td>无</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td>
+                  <div class="actions">
+                    <button class="btn btn-outline btn-sm">编辑</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="document.getElementById('deleteModal').classList.add('show')">删除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>B-01</td>
+                <td>三楼中间</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td>
+                  <div class="actions">
+                    <button class="btn btn-outline btn-sm">编辑</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="document.getElementById('deleteModal').classList.add('show')">删除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>B-02</td>
+                <td>三楼中间</td>
+                <td>无</td>
+                <td><span class="badge badge-maintenance">维护中</span></td>
+                <td>
+                  <div class="actions">
+                    <button class="btn btn-outline btn-sm">编辑</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="document.getElementById('deleteModal').classList.add('show')">删除</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>B-03</td>
+                <td>三楼中间</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td>
+                  <div class="actions">
+                    <button class="btn btn-outline btn-sm">编辑</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="document.getElementById('deleteModal').classList.add('show')">删除</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 手机端卡片 -->
+      <div class="mobile-cards" style="display: none;">
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">A-01</span>
+            <span class="badge badge-available">可用</span>
+          </div>
+          <div class="seat-card-info">三楼靠窗 | 电源：有</div>
+          <div class="seat-card-actions">
+            <button class="btn btn-outline btn-sm" style="flex: 1;">编辑</button>
+            <button class="btn btn-outline-danger btn-sm" style="flex: 1;" onclick="document.getElementById('deleteModal').classList.add('show')">删除</button>
+          </div>
+        </div>
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">A-02</span>
+            <span class="badge badge-available">可用</span>
+          </div>
+          <div class="seat-card-info">三楼靠窗 | 电源：有</div>
+          <div class="seat-card-actions">
+            <button class="btn btn-outline btn-sm" style="flex: 1;">编辑</button>
+            <button class="btn btn-outline-danger btn-sm" style="flex: 1;" onclick="document.getElementById('deleteModal').classList.add('show')">删除</button>
+          </div>
+        </div>
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">A-03</span>
+            <span class="badge badge-available">可用</span>
+          </div>
+          <div class="seat-card-info">三楼靠窗 | 电源：无</div>
+          <div class="seat-card-actions">
+            <button class="btn btn-outline btn-sm" style="flex: 1;">编辑</button>
+            <button class="btn btn-outline-danger btn-sm" style="flex: 1;" onclick="document.getElementById('deleteModal').classList.add('show')">删除</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 异常提示示例（隐藏） -->
+      <div class="alert alert-danger hidden">
+        座位编号已存在
+      </div>
+      <div class="alert alert-danger hidden">
+        该座位有预约记录，无法删除
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增/编辑表单弹窗 -->
+  <div class="modal-overlay" id="seatFormModal">
+    <div class="modal" style="width: 500px;">
+      <div class="modal-title">新增座位</div>
+      <form>
+        <div class="form-group">
+          <label class="form-label">座位编号</label>
+          <input type="text" class="form-control" placeholder="如：A-01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">位置</label>
+          <input type="text" class="form-control" placeholder="如：三楼靠窗">
+        </div>
+        <div class="form-group">
+          <label class="form-label">电源</label>
+          <select class="form-control">
+            <option value="1">有</option>
+            <option value="0">无</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">状态</label>
+          <select class="form-control">
+            <option value="0">可用</option>
+            <option value="1">维护中</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="document.getElementById('seatFormModal').classList.remove('show')">取消</button>
+          <button type="submit" class="btn btn-primary">提交</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 删除确认弹窗 -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+      <div class="modal-title">确认删除</div>
+      <div class="modal-body">确定删除此座位吗？此操作不可恢复。</div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="document.getElementById('deleteModal').classList.remove('show')">取消</button>
+        <button class="btn btn-danger" onclick="document.getElementById('deleteModal').classList.remove('show')">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部安全留白 -->
+  <div style="height: 24px;"></div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>座位详情 - 图书馆座位预约系统</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="top-nav">
+    <div class="logo">图书馆座位预约</div>
+    <div class="nav-items">
+      <span class="nav-item">首页</span>
+      <span class="nav-item active">座位列表</span>
+      <span class="nav-item">我的预约</span>
+      <div class="user-dropdown">
+        <button class="user-btn">当前用户：张三 ▾</button>
+        <div class="dropdown-menu">
+          <div class="dropdown-item">张三</div>
+          <div class="dropdown-item">李四</div>
+          <div class="dropdown-item">王五</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 页面内容 -->
+  <div class="page-content">
+    <div class="container">
+      <!-- 返回链接 -->
+      <a href="#" style="display: inline-flex; align-items: center; gap: 4px; margin-bottom: 16px; font-size: 14px;">← 返回列表</a>
+
+      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+        <!-- 左侧：座位信息卡片 -->
+        <div class="card">
+          <div class="card-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h2>A-01</h2>
+              <span class="badge badge-available">可用</span>
+            </div>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <div class="form-label">位置</div>
+            <div>三楼靠窗</div>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <div class="form-label">电源</div>
+            <div>有</div>
+          </div>
+          <div>
+            <div class="form-label">状态说明</div>
+            <div class="small">该座位当前可预约</div>
+          </div>
+        </div>
+
+        <!-- 右侧：时段状态 -->
+        <div class="card">
+          <div class="card-header">
+            <h3>今日时段预约状态</h3>
+          </div>
+          <div class="time-slots">
+            <div class="time-slot">
+              <span class="time-slot-time">08:00-10:00</span>
+              <span class="badge badge-bookable">可预约</span>
+            </div>
+            <div class="time-slot">
+              <span class="time-slot-time">10:00-12:00</span>
+              <span class="badge badge-reserved">已占用</span>
+            </div>
+            <div class="time-slot">
+              <span class="time-slot-time">14:00-16:00</span>
+              <span class="badge badge-bookable">可预约</span>
+            </div>
+            <div class="time-slot">
+              <span class="time-slot-time">16:00-18:00</span>
+              <span class="badge badge-bookable">可预约</span>
+            </div>
+            <div class="time-slot">
+              <span class="time-slot-time">19:00-21:00</span>
+              <span class="badge badge-reserved">已占用</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <button class="btn btn-primary btn-block">预约此座位</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

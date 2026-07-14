@@ -9,30 +9,20 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-md navbar-dark navbar-custom">
+            <div class="container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">图书馆座位预约</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">首页</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Seat" asp-action="List">座位列表</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Reservation" asp-action="My">我的预约</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        @if (Context.Session.GetString("AdminUsername") != null)
-                        {
-                            <li class="nav-item">
-                                <span class="nav-link text-success">管理员: @Context.Session.GetString("AdminUsername")</span>
-                            </li>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    @{
+                        var currentUserName = Context.Session.GetString("CurrentUserName") ?? "张三";
+                        var isAdmin = Context.Session.GetString("AdminUsername") != null;
+                    }
+                    @if (isAdmin)
+                    {
+                        <ul class="navbar-nav me-auto">
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Admin" asp-action="SeatIndex">座位管理</a>
                             </li>
@@ -40,24 +30,52 @@
                                 <a class="nav-link" asp-controller="Admin" asp-action="ReservationIndex">预约管理</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Admin" asp-action="Statistics">统计页</a>
+                                <a class="nav-link" asp-controller="Admin" asp-action="Statistics">统计</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <span class="nav-link text-success">管理员: @Context.Session.GetString("AdminUsername")</span>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Admin" asp-action="Logout">退出登录</a>
                             </li>
-                        }
-                        else
-                        {
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Admin" asp-action="Login">管理员登录</a>
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">首页</a>
                             </li>
-                        }
-                    </ul>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Seat" asp-action="List">座位列表</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Reservation" asp-action="My">我的预约</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                    @currentUserName
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#" onclick="switchUser('张三')">张三</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="switchUser('李四')">李四</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="switchUser('王五')">王五</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Login">管理员入口</a>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container mt-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -71,6 +89,31 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function switchUser(userName) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/Reservation/SwitchUser';
+            
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'userName';
+            input.value = userName;
+            form.appendChild(input);
+            
+            var token = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (token) {
+                var tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = token.value;
+                form.appendChild(tokenInput);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

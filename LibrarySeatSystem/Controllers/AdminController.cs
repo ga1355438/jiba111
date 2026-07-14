@@ -1,27 +1,37 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using LibrarySeatSystem.Data;
+using LibrarySeatSystem.Filters;
+using LibrarySeatSystem.Helpers;
 using LibrarySeatSystem.Models.Entities;
-using System.Security.Cryptography;
-using System.Text;
+using LibrarySeatSystem.Models.Enums;
 
 namespace LibrarySeatSystem.Controllers;
 
+[ServiceFilter(typeof(AdminAuthorizationFilter))]
 public class AdminController : Controller
 {
     private readonly AppDbContext _context;
-    public AdminController(AppDbContext context) => _context = context;
-
-    private bool IsLoggedIn() => HttpContext.Session.GetString("AdminUsername") != null;
+    private readonly IMemoryCache _cache;
+    public AdminController(AppDbContext context, IMemoryCache cache)
+    {
+        _context = context;
+        _cache = cache;
+    }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Login()
     {
-        if (IsLoggedIn()) return RedirectToAction("SeatIndex");
+        if (HttpContext.Session.GetString("AdminUsername") != null)
+            return RedirectToAction("SeatIndex");
         return View();
     }
 
     [HttpPost]
+    [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public IActionResult Login(string username, string password)
     {
@@ -31,7 +41,7 @@ public class AdminController : Controller
             return View();
         }
 
-        var hash = ComputeMd5(password);
+        var hash = PasswordHelper.HashPassword(password);
         var admin = _context.AdminUsers.FirstOrDefault(a =>
             a.Username == username && a.Password == hash);
 
@@ -45,6 +55,7 @@ public class AdminController : Controller
         return RedirectToAction("SeatIndex");
     }
 
+    [AllowAnonymous]
     public IActionResult Logout()
     {
         HttpContext.Session.Remove("AdminUsername");
@@ -54,24 +65,20 @@ public class AdminController : Controller
     [HttpGet("Admin/Seat/Index")]
     public async Task<IActionResult> SeatIndex()
     {
-        if (!IsLoggedIn()) return RedirectToAction("Login");
-        var seats = await _context.Seats.OrderBy(s => s.Id).ToListAsync();
+        var seats = await _context.Seats.AsNoTracking().OrderBy(s => s.Id).ToListAsync();
         return View(seats);
     }
 
     [HttpGet("Admin/SeatCreate")]
     public IActionResult SeatCreate()
     {
-        if (!IsLoggedIn()) return RedirectToAction("Login");
-        return View(new Seat { Status = 0 });
+        return View(new Seat { Status = SeatStatus.Available });
     }
 
     [HttpPost("Admin/SeatCreate")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> SeatCreate(Seat seat)
     {
-        if (!IsLoggedIn()) return RedirectToAction("Login");
-
         if (await _context.Seats.AnyAsync(s => s.Name == seat.Name))
         {
             ViewBag.Error = "座位编号已存在";
@@ -87,7 +94,6 @@ public class AdminController : Controller
     [HttpGet("Admin/SeatEdit/{id:int}")]
     public async Task<IActionResult> SeatEdit(int id)
     {
-        if (!IsLoggedIn()) return RedirectToAction("Login");
         var seat = await _context.Seats.FindAsync(id);
         if (seat == null) return NotFound();
         return View(seat);
@@ -97,8 +103,6 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> SeatEdit(Seat seat)
     {
-        if (!IsLoggedIn()) return RedirectToAction("Login");
-
         var existing = await _context.Seats.FindAsync(seat.Id);
         if (existing == null) return NotFound();
 
@@ -120,8 +124,6 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> SeatDelete(int id)
     {
-        if (!IsLoggedIn()) return RedirectToAction("Login");
-
         var seat = await _context.Seats.FindAsync(id);
         if (seat == null) return NotFound();
 
@@ -138,11 +140,10 @@ public class AdminController : Controller
     }
 
     [HttpGet("Admin/Reservation/Index")]
-    public async Task<IActionResult> ReservationIndex(DateTime? date, int? status)
+    public async Task<IActionResult> ReservationIndex(DateTime? date, ReservationStatus? status, int page = 1)
     {
-        if (!IsLoggedIn()) return RedirectToAction("Login");
-
-        var query = _context.Reservations.Include(r => r.Seat).AsQueryable();
+        int pageSize = 10;
+        var query = _context.Reservations.Include(r => r.Seat).AsNoTracking().AsQueryable();
 
         if (date.HasValue)
             query = query.Where(r => r.ReserveDate == date.Value);
@@ -150,49 +151,90 @@ public class AdminController : Controller
         if (status.HasValue)
             query = query.Where(r => r.Status == status.Value);
 
+        var total = await query.CountAsync();
         var reservations = await query
             .OrderByDescending(r => r.ReserveDate)
             .ThenBy(r => r.TimeSlot)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
         ViewBag.FilterDate = date?.ToString("yyyy-MM-dd");
         ViewBag.FilterStatus = status;
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = (int)Math.Ceiling(total / (double)pageSize);
+        ViewBag.TotalCount = total;
         return View(reservations);
     }
 
     [HttpGet("Admin/Statistics/Index")]
     public async Task<IActionResult> Statistics()
     {
-        if (!IsLoggedIn()) return RedirectToAction("Login");
+        var cacheKey = "StatisticsData";
+        if (!_cache.TryGetValue(cacheKey, out StatisticsData stats))
+        {
+            var today = DateTime.Today;
+            var reservations = await _context.Reservations
+                .Include(r => r.Seat)
+                .AsNoTracking()
+                .ToListAsync();
 
-        var today = DateTime.Today;
-        ViewBag.TotalCount = await _context.Reservations.CountAsync();
-        ViewBag.TodayCount = await _context.Reservations.CountAsync(r => r.ReserveDate == today);
-        ViewBag.ActiveCount = await _context.Reservations.CountAsync(r => r.Status == 0);
+            stats = new StatisticsData
+            {
+                TotalCount = reservations.Count,
+                TodayCount = reservations.Count(r => r.ReserveDate.Date == today && r.Status != ReservationStatus.Cancelled),
+                ActiveCount = reservations.Count(r => r.Status == ReservationStatus.Reserved),
+                TopSeats = reservations
+                    .Where(r => r.Status != ReservationStatus.Cancelled)
+                    .GroupBy(r => r.SeatId)
+                    .Select(g => new { SeatId = g.Key, Count = g.Count() })
+                    .OrderByDescending(x => x.Count)
+                    .Take(5)
+                    .Join(_context.Seats, x => x.SeatId, s => s.Id, (x, s) => new TopSeatInfo { Name = s.Name, Count = x.Count })
+                    .ToList(),
+                TimeSlotDistribution = reservations
+                    .Where(r => r.Status != ReservationStatus.Cancelled)
+                    .GroupBy(r => r.TimeSlot)
+                    .Select(g => new TimeSlotInfo { Slot = g.Key, Count = g.Count() })
+                    .OrderByDescending(x => x.Count)
+                    .ToList(),
+                TotalForPercentage = reservations.Count(r => r.Status != ReservationStatus.Cancelled)
+            };
 
-        ViewBag.TopSeats = await _context.Reservations
-            .GroupBy(r => r.SeatId)
-            .Select(g => new { SeatId = g.Key, Count = g.Count() })
-            .OrderByDescending(x => x.Count)
-            .Take(5)
-            .Join(_context.Seats, x => x.SeatId, s => s.Id, (x, s) => new { s.Name, x.Count })
-            .ToListAsync();
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+            _cache.Set(cacheKey, stats, cacheOptions);
+        }
 
-        var totalRes = await _context.Reservations.CountAsync();
-        ViewBag.TimeSlotDistribution = await _context.Reservations
-            .GroupBy(r => r.TimeSlot)
-            .Select(g => new { Slot = g.Key, Count = g.Count() })
-            .OrderByDescending(x => x.Count)
-            .ToListAsync();
+        ViewBag.TotalCount = stats.TotalCount;
+        ViewBag.TodayCount = stats.TodayCount;
+        ViewBag.ActiveCount = stats.ActiveCount;
+        ViewBag.TopSeats = stats.TopSeats;
+        ViewBag.TimeSlotDistribution = stats.TimeSlotDistribution;
+        ViewBag.TotalForPercentage = stats.TotalForPercentage;
 
-        ViewBag.TotalForPercentage = totalRes;
         return View();
     }
+}
 
-    private static string ComputeMd5(string input)
-    {
-        using var md5 = MD5.Create();
-        var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
-        return BitConverter.ToString(bytes).Replace("-", "").ToLowerInvariant();
-    }
+public class StatisticsData
+{
+    public int TotalCount { get; set; }
+    public int TodayCount { get; set; }
+    public int ActiveCount { get; set; }
+    public List<TopSeatInfo> TopSeats { get; set; } = new();
+    public List<TimeSlotInfo> TimeSlotDistribution { get; set; } = new();
+    public int TotalForPercentage { get; set; }
+}
+
+public class TopSeatInfo
+{
+    public string Name { get; set; } = string.Empty;
+    public int Count { get; set; }
+}
+
+public class TimeSlotInfo
+{
+    public string Slot { get; set; } = string.Empty;
+    public int Count { get; set; }
 }

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>座位列表 - 图书馆座位预约系统</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="top-nav">
+    <div class="logo">图书馆座位预约</div>
+    <div class="nav-items">
+      <span class="nav-item">首页</span>
+      <span class="nav-item active">座位列表</span>
+      <span class="nav-item">我的预约</span>
+      <div class="user-dropdown">
+        <button class="user-btn">当前用户：张三 ▾</button>
+        <div class="dropdown-menu">
+          <div class="dropdown-item">张三</div>
+          <div class="dropdown-item">李四</div>
+          <div class="dropdown-item">王五</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 页面内容 -->
+  <div class="page-content">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1>座位列表</h1>
+        <span class="small">共 20 个座位</span>
+      </div>
+
+      <!-- 桌面端表格 -->
+      <div class="card desktop-only">
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>编号</th>
+                <th>位置</th>
+                <th>电源</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A-01</td>
+                <td>三楼靠窗</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td><button class="btn btn-outline btn-sm">查看详情</button></td>
+              </tr>
+              <tr>
+                <td>A-02</td>
+                <td>三楼靠窗</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td><button class="btn btn-outline btn-sm">查看详情</button></td>
+              </tr>
+              <tr>
+                <td>A-03</td>
+                <td>三楼靠窗</td>
+                <td>无</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td><button class="btn btn-outline btn-sm">查看详情</button></td>
+              </tr>
+              <tr>
+                <td>B-01</td>
+                <td>三楼中间</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td><button class="btn btn-outline btn-sm">查看详情</button></td>
+              </tr>
+              <tr>
+                <td>B-02</td>
+                <td>三楼中间</td>
+                <td>无</td>
+                <td><span class="badge badge-maintenance">维护中</span></td>
+                <td><button class="btn btn-outline btn-sm" disabled>查看详情</button></td>
+              </tr>
+              <tr>
+                <td>B-03</td>
+                <td>三楼中间</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td><button class="btn btn-outline btn-sm">查看详情</button></td>
+              </tr>
+              <tr>
+                <td>C-01</td>
+                <td>二楼靠窗</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td><button class="btn btn-outline btn-sm">查看详情</button></td>
+              </tr>
+              <tr>
+                <td>C-02</td>
+                <td>二楼靠窗</td>
+                <td>无</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td><button class="btn btn-outline btn-sm">查看详情</button></td>
+              </tr>
+              <tr>
+                <td>C-03</td>
+                <td>二楼靠窗</td>
+                <td>有</td>
+                <td><span class="badge badge-available">可用</span></td>
+                <td><button class="btn btn-outline btn-sm">查看详情</button></td>
+              </tr>
+              <tr>
+                <td>D-01</td>
+                <td>二楼中间</td>
+                <td>无</td>
+                <td><span class="badge badge-maintenance">维护中</span></td>
+                <td><button class="btn btn-outline btn-sm" disabled>查看详情</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 分页 -->
+        <div class="pagination">
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+        </div>
+      </div>
+
+      <!-- 手机端卡片 -->
+      <div class="mobile-cards" style="display: none;">
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">A-01</span>
+            <span class="badge badge-available">可用</span>
+          </div>
+          <div class="seat-card-info">三楼靠窗 | 电源：有</div>
+          <button class="btn btn-outline btn-sm w-full">查看详情</button>
+        </div>
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">A-02</span>
+            <span class="badge badge-available">可用</span>
+          </div>
+          <div class="seat-card-info">三楼靠窗 | 电源：有</div>
+          <button class="btn btn-outline btn-sm w-full">查看详情</button>
+        </div>
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">A-03</span>
+            <span class="badge badge-available">可用</span>
+          </div>
+          <div class="seat-card-info">三楼靠窗 | 电源：无</div>
+          <button class="btn btn-outline btn-sm w-full">查看详情</button>
+        </div>
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">B-01</span>
+            <span class="badge badge-available">可用</span>
+          </div>
+          <div class="seat-card-info">三楼中间 | 电源：有</div>
+          <button class="btn btn-outline btn-sm w-full">查看详情</button>
+        </div>
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">B-02</span>
+            <span class="badge badge-maintenance">维护中</span>
+          </div>
+          <div class="seat-card-info">三楼中间 | 电源：无</div>
+          <button class="btn btn-outline btn-sm w-full" disabled>查看详情</button>
+        </div>
+
+        <div class="pagination">
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

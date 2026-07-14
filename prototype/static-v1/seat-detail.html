@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>座位详情 - 图书馆座位预约系统</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="top-nav">
+    <a href="index.html" class="logo">图书馆座位预约</a>
+    <div class="nav-items">
+      <a href="index.html" class="nav-item">首页</a>
+      <a href="seat-list.html" class="nav-item active">座位列表</a>
+      <a href="my-reservations.html" class="nav-item">我的预约</a>
+      <a href="../admin/login.html" class="nav-item">管理员入口</a>
+    </div>
+  </nav>
+
+  <!-- 页面内容 -->
+  <div class="page-content">
+    <div class="container">
+      <!-- 返回链接 -->
+      <a href="seat-list.html" style="display: inline-flex; align-items: center; gap: 4px; margin-bottom: 16px; font-size: 14px;">← 返回列表</a>
+
+      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+        <!-- 左侧：座位信息卡片 -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h2 style="margin: 0;">A-01</h2>
+            <span class="badge badge-available">可用</span>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 14px; font-weight: 500; color: var(--text-body); margin-bottom: 4px;">位置</div>
+            <div>三楼靠窗</div>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 14px; font-weight: 500; color: var(--text-body); margin-bottom: 4px;">电源</div>
+            <div>有</div>
+          </div>
+          <div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--text-body); margin-bottom: 4px;">状态说明</div>
+            <div class="small">该座位当前可预约</div>
+          </div>
+        </div>
+
+        <!-- 右侧：时段状态 -->
+        <div class="card">
+          <h3 style="margin-bottom: 16px;">今日时段预约状态</h3>
+          <div class="time-slots">
+            <div class="time-slot">
+              <span class="time-slot-time">08:00-10:00</span>
+              <span class="badge badge-bookable">可预约</span>
+            </div>
+            <div class="time-slot">
+              <span class="time-slot-time">10:00-12:00</span>
+              <span class="badge badge-reserved">已占用</span>
+            </div>
+            <div class="time-slot">
+              <span class="time-slot-time">14:00-16:00</span>
+              <span class="badge badge-bookable">可预约</span>
+            </div>
+            <div class="time-slot">
+              <span class="time-slot-time">16:00-18:00</span>
+              <span class="badge badge-bookable">可预约</span>
+            </div>
+            <div class="time-slot">
+              <span class="time-slot-time">19:00-21:00</span>
+              <span class="badge badge-reserved">已占用</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <a href="reservation-create.html" class="btn btn-primary w-full">预约此座位</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 维护中状态示例（隐藏，可用于展示） -->
+      <div class="alert alert-warning hidden" style="margin-top: 16px;">
+        该座位当前维护中，暂不可预约
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部安全留白 -->
+  <div style="height: 24px;"></div>
+</body>
+</html>

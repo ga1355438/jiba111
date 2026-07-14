@@ -1,0 +1,813 @@
+/* ========================================
+   图书馆座位预约系统 - 共享样式
+   基于 05-页面卡与UI规范.md（已审计）
+   ======================================== */
+
+/* 1. CSS Variables */
+:root {
+  /* Primary */
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --primary-light: #EFF6FF;
+
+  /* Functional */
+  --success: #16A34A;
+  --success-bg: #DCFCE7;
+  --warning: #D97706;
+  --warning-bg: #FEF3C7;
+  --danger: #DC2626;
+  --danger-bg: #FEE2E2;
+  --info: #0891B2;
+  --info-bg: #EFF6FF;
+
+  /* Neutral */
+  --text-title: #111827;
+  --text-body: #374151;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --bg-page: #F9FAFB;
+  --bg-card: #FFFFFF;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+}
+
+/* 2. CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 3. Base Styles */
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+  color: var(--text-body);
+  background-color: var(--bg-page);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* 4. Typography */
+h1 { font-size: 24px; font-weight: 700; color: var(--text-title); line-height: 32px; }
+h2 { font-size: 20px; font-weight: 600; color: var(--text-title); line-height: 28px; }
+h3 { font-size: 16px; font-weight: 600; color: var(--text-title); line-height: 24px; }
+p, .text { font-size: 16px; font-weight: 400; color: var(--text-body); }
+.small { font-size: 14px; color: var(--text-muted); }
+.label { font-size: 12px; font-weight: 500; }
+
+/* 5. Links */
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 6. Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+  padding: var(--space-lg) var(--space-md);
+}
+
+/* 7. Top Navigation - 用户端 */
+.top-nav {
+  background-color: #111827;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-md);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-nav .logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.top-nav .nav-items {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.top-nav .nav-item {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  cursor: pointer;
+  padding: var(--space-sm) 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.top-nav .nav-item:hover,
+.top-nav .nav-item.active {
+  color: #FFFFFF;
+  border-bottom-color: #FFFFFF;
+}
+
+/* 8. Top Navigation - 管理端 */
+.admin-nav {
+  background-color: #111827;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-lg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.admin-nav .logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.admin-nav .nav-items {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.admin-nav .nav-item {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  cursor: pointer;
+  padding: var(--space-sm) 0;
+  transition: all 0.2s;
+}
+
+.admin-nav .nav-item:hover,
+.admin-nav .nav-item.active {
+  color: #FFFFFF;
+}
+
+/* 9. Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  height: 40px;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  text-decoration: none;
+}
+
+.btn-success {
+  background: var(--success);
+  color: #FFFFFF;
+}
+
+.btn-success:hover {
+  background: #15803D;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #FFFFFF;
+}
+
+.btn-danger:hover {
+  background: #B91C1C;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-body);
+}
+
+.btn-outline:hover {
+  background: var(--bg-page);
+}
+
+.btn-outline-danger {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+.btn-outline-danger:hover {
+  background: var(--danger-bg);
+}
+
+.btn-sm {
+  height: 32px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 10. Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: var(--space-md);
+}
+
+.card-header {
+  margin-bottom: var(--space-md);
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+/* 11. Forms */
+.form-group {
+  margin-bottom: var(--space-md);
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-body);
+  margin-bottom: var(--space-sm);
+}
+
+.form-control {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  color: var(--text-body);
+  transition: all 0.2s;
+  background: var(--bg-card);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.form-control.error {
+  border-color: var(--danger);
+}
+
+.form-control:disabled,
+.form-control.disabled {
+  background: var(--bg-page);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.form-error {
+  font-size: 14px;
+  color: var(--danger);
+  margin-top: var(--space-xs);
+}
+
+.form-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 20px;
+  padding-right: 36px;
+}
+
+/* 12. Tables */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  background: var(--bg-page);
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-body);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 16px;
+  font-size: 16px;
+  color: var(--text-body);
+  border-bottom: 1px solid var(--border);
+}
+
+.table tr:nth-child(even) {
+  background: var(--bg-page);
+}
+
+.table tr:hover {
+  background: var(--primary-light);
+}
+
+.table .actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* 13. Status Badges */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-xl);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-available {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.badge-maintenance {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.badge-reserved {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.badge-cancelled {
+  background: #F3F4F6;
+  color: var(--text-muted);
+}
+
+.badge-bookable {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+/* 14. Alerts */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  margin-bottom: var(--space-md);
+}
+
+.alert-info {
+  background: var(--info-bg);
+  color: var(--primary);
+  border: 1px solid #BFDBFE;
+}
+
+.alert-warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid #FDE68A;
+}
+
+.alert-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid #FECACA;
+}
+
+.alert-success {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid #BBF7D0;
+}
+
+/* 15. Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  display: none;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  width: 400px;
+  max-width: 90%;
+  padding: var(--space-lg);
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-title);
+  margin-bottom: var(--space-md);
+}
+
+.modal-body {
+  font-size: 16px;
+  color: var(--text-body);
+  margin-bottom: var(--space-lg);
+}
+
+.modal-footer {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-end;
+}
+
+/* 16. Pagination */
+.pagination {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+  margin-top: var(--space-lg);
+}
+
+.pagination .page-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--text-body);
+  background: var(--bg-card);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.pagination .page-btn:hover {
+  background: var(--bg-page);
+}
+
+.pagination .page-btn.active {
+  background: var(--primary);
+  color: #FFFFFF;
+  border-color: var(--primary);
+}
+
+/* 17. Info Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.info-item {
+  text-align: center;
+}
+
+.info-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.info-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+/* 18. Time Slots */
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-md);
+}
+
+.time-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+}
+
+.time-slot-time {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-body);
+}
+
+/* 19. Seat Card (Mobile) */
+.seat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.seat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-sm);
+}
+
+.seat-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.seat-card-info {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.seat-card-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* 20. Filter Bar */
+.filter-bar {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-body);
+}
+
+/* 21. Empty State */
+.empty-state {
+  text-align: center;
+  padding: 48px var(--space-md);
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: var(--space-md);
+}
+
+.empty-state-text {
+  font-size: 16px;
+}
+
+/* 22. Utilities */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-primary { color: var(--primary) !important; }
+.text-success { color: var(--success) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-danger { color: var(--danger) !important; }
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: var(--space-sm); }
+.mb-2 { margin-bottom: var(--space-md); }
+.mb-3 { margin-bottom: var(--space-lg); }
+.mt-2 { margin-top: var(--space-md); }
+.mt-3 { margin-top: var(--space-lg); }
+.gap-2 { gap: var(--space-md); }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.w-full { width: 100%; }
+.hidden { display: none; }
+
+/* 23. Responsive - Mobile First */
+@media (max-width: 640px) {
+  .top-nav .nav-items {
+    gap: var(--space-sm);
+  }
+
+  .top-nav .nav-item {
+    font-size: 12px;
+  }
+
+  .page-content {
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-wrapper {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: block !important;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .btn-block-mobile {
+    width: 100%;
+  }
+
+  .time-slots {
+    grid-template-columns: 1fr;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+
+  .pagination .page-btn {
+    width: auto;
+    padding: 0 var(--space-md);
+  }
+}
+
+@media (min-width: 641px) {
+  .mobile-cards {
+    display: none !important;
+  }
+}
+
+/* 24. User Page Header */
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+/* 25. Data Cards */
+.data-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.data-card-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-title);
+}
+
+.data-card-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+/* 26. Admin Layout */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  min-height: calc(100vh - 56px);
+}
+
+.admin-sidebar {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  padding: var(--space-md) 0;
+}
+
+.admin-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 12px var(--space-lg);
+  font-size: 14px;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-sidebar-item:hover {
+  background: var(--bg-page);
+}
+
+.admin-sidebar-item.active {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-left: 3px solid var(--primary);
+}
+
+.admin-main {
+  padding: var(--space-lg);
+  background: var(--bg-page);
+}
+
+/* 27. Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+/* 28. Admin Content Card */
+.admin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}

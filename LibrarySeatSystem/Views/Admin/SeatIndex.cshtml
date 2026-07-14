@@ -3,51 +3,86 @@
     ViewData["Title"] = "座位管理";
 }
 
-<h2>座位管理</h2>
+<div class="page-header">
+    <h1>座位管理</h1>
+    <a asp-action="SeatCreate" class="btn btn-success">+ 新增座位</a>
+</div>
 
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-danger">@ViewBag.Error</div>
 }
 
-<a asp-action="SeatCreate" class="btn btn-success mb-3">新增座位</a>
-
-<table class="table table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>座位编号</th>
-            <th>位置</th>
-            <th>电源</th>
-            <th>状态</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var seat in Model)
-        {
+<!-- 桌面端表格 -->
+<div class="card-custom table-responsive">
+    <table class="table-custom">
+        <thead>
             <tr>
-                <td>@seat.Name</td>
-                <td>@seat.Location</td>
-                <td>@(seat.HasPower ? "有" : "无")</td>
-                <td>
-                    @if (seat.Status == 0)
-                    {
-                        <span class="badge bg-success">可用</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-warning">维护中</span>
-                    }
-                </td>
-                <td>
-                    <a asp-action="SeatEdit" asp-route-id="@seat.Id" class="btn btn-sm btn-outline-primary">编辑</a>
-                    <form asp-action="SeatDelete" asp-route-id="@seat.Id" method="post" class="d-inline"
-                          onsubmit="return confirm('确定删除此座位吗？')">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-sm btn-outline-danger">删除</button>
-                    </form>
-                </td>
+                <th>编号</th>
+                <th>位置</th>
+                <th>电源</th>
+                <th>状态</th>
+                <th>操作</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var seat in Model)
+            {
+                <tr>
+                    <td>@seat.Name</td>
+                    <td>@seat.Location</td>
+                    <td>@(seat.HasPower ? "有" : "无")</td>
+                    <td>
+                        @if (seat.Status == 0)
+                        {
+                            <span class="badge badge-available">可用</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-maintenance">维护中</span>
+                        }
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            <a asp-action="SeatEdit" asp-route-id="@seat.Id" class="btn btn-sm btn-outline-primary">编辑</a>
+                            <form asp-action="SeatDelete" asp-route-id="@seat.Id" method="post" class="d-inline"
+                                  onsubmit="return confirm('确定删除此座位吗？')">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger">删除</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- 手机端卡片 -->
+<div class="mobile-cards" style="display: none;">
+    @foreach (var seat in Model)
+    {
+        <div class="card-custom mb-3">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <span style="font-size: 16px; font-weight: 600; color: var(--text-title);">@seat.Name</span>
+                @if (seat.Status == 0)
+                {
+                    <span class="badge badge-available">可用</span>
+                }
+                else
+                {
+                    <span class="badge badge-maintenance">维护中</span>
+                }
+            </div>
+            <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">@seat.Location | 电源：@(seat.HasPower ? "有" : "无")</div>
+            <div style="display: flex; gap: 8px;">
+                <a asp-action="SeatEdit" asp-route-id="@seat.Id" class="btn btn-outline-primary btn-sm" style="flex: 1;">编辑</a>
+                <form asp-action="SeatDelete" asp-route-id="@seat.Id" method="post" style="flex: 1;"
+                      onsubmit="return confirm('确定删除此座位吗？')">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">删除</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>

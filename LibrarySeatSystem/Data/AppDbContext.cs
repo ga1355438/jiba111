@@ -20,6 +20,8 @@ public class AppDbContext : DbContext
             e.HasKey(s => s.Id);
             e.Property(s => s.Name).HasMaxLength(50);
             e.Property(s => s.Location).HasMaxLength(100);
+            e.HasIndex(s => s.Name).IsUnique();
+            e.HasIndex(s => s.Status);
         });
 
         modelBuilder.Entity<Reservation>(e =>
@@ -28,7 +30,10 @@ public class AppDbContext : DbContext
             e.Property(r => r.UserName).HasMaxLength(50);
             e.Property(r => r.TimeSlot).HasMaxLength(20);
             e.HasOne(r => r.Seat).WithMany().HasForeignKey(r => r.SeatId);
-            e.HasIndex(r => new { r.SeatId, r.ReserveDate, r.TimeSlot });
+            e.HasIndex(r => new { r.SeatId, r.ReserveDate, r.TimeSlot }).IsUnique();
+            e.HasIndex(r => r.UserName);
+            e.HasIndex(r => r.Status);
+            e.HasIndex(r => r.ReserveDate);
         });
 
         modelBuilder.Entity<AdminUser>(e =>
@@ -36,6 +41,7 @@ public class AppDbContext : DbContext
             e.HasKey(a => a.Id);
             e.Property(a => a.Username).HasMaxLength(50);
             e.Property(a => a.Password).HasMaxLength(100);
+            e.HasIndex(a => a.Username).IsUnique();
         });
     }
 }

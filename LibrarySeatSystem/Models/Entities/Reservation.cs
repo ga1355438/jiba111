@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using LibrarySeatSystem.Models.Enums;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace LibrarySeatSystem.Models.Entities;
@@ -24,7 +25,7 @@ public class Reservation
     [MaxLength(20)]
     public string TimeSlot { get; set; } = string.Empty;
 
-    public int Status { get; set; }
+    public ReservationStatus Status { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

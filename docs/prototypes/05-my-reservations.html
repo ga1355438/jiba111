@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的预约 - 图书馆座位预约系统</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="top-nav">
+    <div class="logo">图书馆座位预约</div>
+    <div class="nav-items">
+      <span class="nav-item">首页</span>
+      <span class="nav-item">座位列表</span>
+      <span class="nav-item active">我的预约</span>
+      <div class="user-dropdown">
+        <button class="user-btn">当前用户：张三 ▾</button>
+        <div class="dropdown-menu">
+          <div class="dropdown-item">张三</div>
+          <div class="dropdown-item">李四</div>
+          <div class="dropdown-item">王五</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 页面内容 -->
+  <div class="page-content">
+    <div class="container">
+      <h1 style="margin-bottom: 24px;">我的预约</h1>
+
+      <!-- 桌面端表格 -->
+      <div class="card desktop-only">
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>座位编号</th>
+                <th>日期</th>
+                <th>时段</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A-01</td>
+                <td>2026-07-14</td>
+                <td>08:00-10:00</td>
+                <td><span class="badge badge-reserved">已预约</span></td>
+                <td><button class="btn btn-outline-danger btn-sm">取消</button></td>
+              </tr>
+              <tr>
+                <td>B-03</td>
+                <td>2026-07-13</td>
+                <td>14:00-16:00</td>
+                <td><span class="badge badge-cancelled">已取消</span></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>C-01</td>
+                <td>2026-07-12</td>
+                <td>10:00-12:00</td>
+                <td><span class="badge badge-reserved">已预约</span></td>
+                <td><button class="btn btn-outline-danger btn-sm">取消</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 手机端卡片 -->
+      <div class="mobile-cards" style="display: none;">
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">A-01</span>
+            <span class="badge badge-reserved">已预约</span>
+          </div>
+          <div class="seat-card-info">2026-07-14 | 08:00-10:00</div>
+          <button class="btn btn-outline-danger btn-sm w-full">取消</button>
+        </div>
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">B-03</span>
+            <span class="badge badge-cancelled">已取消</span>
+          </div>
+          <div class="seat-card-info">2026-07-13 | 14:00-16:00</div>
+        </div>
+        <div class="seat-card">
+          <div class="seat-card-header">
+            <span class="seat-card-title">C-01</span>
+            <span class="badge badge-reserved">已预约</span>
+          </div>
+          <div class="seat-card-info">2026-07-12 | 10:00-12:00</div>
+          <button class="btn btn-outline-danger btn-sm w-full">取消</button>
+        </div>
+      </div>
+
+      <!-- 空状态示例 -->
+      <div class="card" style="display: none;">
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <div class="empty-state-text">暂无预约记录</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 取消确认弹窗 -->
+  <div class="modal-overlay show" id="cancelModal">
+    <div class="modal">
+      <div class="modal-title">确认取消</div>
+      <div class="modal-body">确定取消此预约吗？取消后无法恢复。</div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="document.getElementById('cancelModal').classList.remove('show')">取消</button>
+        <button class="btn btn-danger">确认取消</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

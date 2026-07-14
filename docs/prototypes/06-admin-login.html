@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理员登录 - 图书馆座位预约系统</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="top-nav">
+    <div class="logo">图书馆座位预约</div>
+    <div class="nav-items">
+      <span class="nav-item active">管理员登录</span>
+    </div>
+  </nav>
+
+  <!-- 页面内容 -->
+  <div class="page-content">
+    <div class="container">
+      <div class="card" style="max-width: 400px; margin: 48px auto; padding: 32px;">
+        <h2 style="text-align: center; margin-bottom: 24px;">管理员登录</h2>
+        
+        <form>
+          <div class="form-group">
+            <label class="form-label">用户名</label>
+            <input type="text" class="form-control" placeholder="请输入用户名" value="admin">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">密码</label>
+            <input type="password" class="form-control" placeholder="请输入密码" value="123456">
+          </div>
+
+          <!-- 错误提示示例 -->
+          <div class="alert alert-danger" style="display: none;">
+            用户名或密码错误
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top: 16px;">登录</button>
+        </form>
+
+        <div class="form-text" style="text-align: center; margin-top: 16px;">
+          默认账号：admin / 123456
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

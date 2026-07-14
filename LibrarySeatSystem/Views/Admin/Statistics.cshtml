@@ -1,84 +1,84 @@
 @{
-    ViewData["Title"] = "统计页";
+    ViewData["Title"] = "统计";
 }
 
-<h2>统计页</h2>
+<h1 style="margin-bottom: 24px;">统计</h1>
 
-<div class="row mt-3">
-    <div class="col-md-4">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-body text-center">
-                <h5 class="card-title">总预约数</h5>
-                <p class="display-6">@ViewBag.TotalCount</p>
-            </div>
-        </div>
+<!-- 数据卡片 -->
+<div class="info-grid">
+    <div class="card-custom text-center" style="padding: 24px;">
+        <div class="info-label">总预约数</div>
+        <div class="info-value">@ViewBag.TotalCount</div>
     </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-body text-center">
-                <h5 class="card-title">今日预约数</h5>
-                <p class="display-6">@ViewBag.TodayCount</p>
-            </div>
-        </div>
+    <div class="card-custom text-center" style="padding: 24px;">
+        <div class="info-label">今日预约数</div>
+        <div class="info-value text-primary-custom">@ViewBag.TodayCount</div>
     </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-info mb-3">
-            <div class="card-body text-center">
-                <h5 class="card-title">有效预约数</h5>
-                <p class="display-6">@ViewBag.ActiveCount</p>
-            </div>
-        </div>
+    <div class="card-custom text-center" style="padding: 24px;">
+        <div class="info-label">有效预约数</div>
+        <div class="info-value text-success-custom">@ViewBag.ActiveCount</div>
     </div>
 </div>
 
-<div class="row mt-3">
-    <div class="col-md-6">
-        <h4>热门座位 TOP5</h4>
-        <table class="table table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>座位编号</th>
-                    <th>预约次数</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (ViewBag.TopSeats != null)
-                {
-                    foreach (var item in ViewBag.TopSeats)
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <!-- 热门座位 TOP5 -->
+    <div class="card-custom">
+        <h3 style="margin-bottom: 16px;">热门座位 TOP5</h3>
+        <div class="table-responsive">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>座位编号</th>
+                        <th>预约次数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.TopSeats != null)
                     {
-                        <tr>
-                            <td>@item.Name</td>
-                            <td>@item.Count</td>
-                        </tr>
+                        var rank = 1;
+                        foreach (var item in ViewBag.TopSeats)
+                        {
+                            <tr>
+                                <td>@rank</td>
+                                <td>@item.Name</td>
+                                <td>@item.Count</td>
+                            </tr>
+                            rank++;
+                        }
                     }
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="col-md-6">
-        <h4>时段预约分布</h4>
-        <table class="table table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>时段</th>
-                    <th>预约次数</th>
-                    <th>占比</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (ViewBag.TimeSlotDistribution != null && (int)ViewBag.TotalForPercentage > 0)
-                {
-                    foreach (var item in ViewBag.TimeSlotDistribution)
+
+    <!-- 时段分布 -->
+    <div class="card-custom">
+        <h3 style="margin-bottom: 16px;">时段分布</h3>
+        <div class="table-responsive">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>时段</th>
+                        <th>预约数</th>
+                        <th>占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.TimeSlotDistribution != null && (int)ViewBag.TotalForPercentage > 0)
                     {
-                        var percentage = (double)item.Count / (int)ViewBag.TotalForPercentage * 100;
-                        <tr>
-                            <td>@item.Slot</td>
-                            <td>@item.Count</td>
-                            <td>@percentage.ToString("F1")%</td>
-                        </tr>
+                        foreach (var item in ViewBag.TimeSlotDistribution)
+                        {
+                            var percentage = (double)item.Count / (int)ViewBag.TotalForPercentage * 100;
+                            <tr>
+                                <td>@item.Slot</td>
+                                <td>@item.Count</td>
+                                <td>@percentage.ToString("F1")%</td>
+                            </tr>
+                        }
                     }
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
